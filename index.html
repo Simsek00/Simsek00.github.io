@@ -1,71 +1,635 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en" data-lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Meok Apps — HexaWord</title>
+    <title>HexaWord — Hexagonal word puzzle | Meok Apps</title>
+    <meta name="description"
+        content="Connect letters on a hexagonal honeycomb to find hidden words. 2000 hand-written levels in four languages, Daily Puzzle, bonus words and offline play.">
+    <meta name="theme-color" content="#E2B15B">
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%AF%3C/text%3E%3C/svg%3E">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HexaWord — Hexagonal word puzzle">
+    <meta property="og:description"
+        content="2000 hand-written levels in four languages. Daily Puzzle, bonus words, cosmetic themes and offline play.">
+    <meta property="og:url" content="https://simsek00.github.io/">
+
     <style>
         :root {
-            color-scheme: light dark;
+            --surface: #F9F4E8;
+            --raised: #FFFFFF;
+            --ink: #4A4238;
+            --ink-soft: #7a705f;
+            --accent: #E2B15B;
+            --on-accent: #4A4238;
+            --cell: #F0EAD6;
+            --outline: rgba(74, 66, 56, .14);
+            --shadow: 0 2px 12px rgba(0, 0, 0, .07);
+            --hero-top: #F6E3BE;
+            --link: #a9761a;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --surface: #1E1A15;
+                --raised: #2A2520;
+                --ink: #F0EAD6;
+                --ink-soft: #b3a892;
+                --accent: #E2B15B;
+                --on-accent: #241F18;
+                --cell: #3A332B;
+                --outline: rgba(240, 234, 214, .16);
+                --shadow: 0 2px 14px rgba(0, 0, 0, .4);
+                --hero-top: #322717;
+                --link: #E2B15B;
+            }
+        }
+
+        /* Dil anahtarı: yalnızca seçili dilin blokları görünür.
+     Yazı JS'ten gelmiyor, ikisi de sayfada duruyor — JS kapalıysa
+     bile İngilizcesi okunur. */
+        html[data-lang="en"] [lang="tr"] {
+            display: none;
+        }
+
+        html[data-lang="tr"] [lang="en"] {
+            display: none;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-            font: 16px/1.6 system-ui, sans-serif;
-            background: #fdf6e6;
-            color: #3a2c12;
+            background: var(--surface);
+            color: var(--ink);
+            font: 17px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #1c1710;
-                color: #f2e6cf;
-            }
-        }
-
-        main {
-            max-width: 34rem;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2rem;
-            margin: 0 0 .5rem;
+        .wrap {
+            max-width: 62rem;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
         a {
-            color: #b8801f;
+            color: var(--link);
         }
 
-        .btn {
-            display: inline-block;
-            margin-top: 1.5rem;
-            padding: .75rem 1.5rem;
-            background: #e2b15b;
-            color: #3a2c12;
-            border-radius: .5rem;
+        /* ---------- hero ---------- */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, var(--hero-top), var(--surface));
+            padding: 4.5rem 0 3.5rem;
+            text-align: center;
+        }
+
+        .hero-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: .16;
+            pointer-events: none;
+        }
+
+        .hero .wrap {
+            position: relative;
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 1rem;
+            right: 1.25rem;
+            z-index: 2;
+            display: flex;
+            gap: .2rem;
+            padding: .25rem;
+            background: var(--raised);
+            border: 1px solid var(--outline);
+            border-radius: 999px;
+            box-shadow: var(--shadow);
+        }
+
+        .lang-switch button {
+            border: 0;
+            margin: 0;
+            padding: .35rem .85rem;
+            background: none;
+            color: var(--ink-soft);
+            font: inherit;
+            font-size: .85rem;
+            font-weight: 700;
+            letter-spacing: .03em;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+
+        .lang-switch button[aria-pressed="true"] {
+            background: var(--accent);
+            color: var(--on-accent);
+        }
+
+        .lang-switch button:focus-visible {
+            outline: 2px solid var(--ink);
+            outline-offset: 2px;
+        }
+
+        .comb {
+            width: min(230px, 58vw);
+            height: auto;
+            margin: 0 auto .5rem;
+            display: block;
+        }
+
+        h1 {
+            font-size: clamp(2.4rem, 7vw, 3.4rem);
+            margin: .4rem 0 .2rem;
+            letter-spacing: -.02em;
+        }
+
+        .tagline {
+            font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+            color: var(--ink-soft);
+            max-width: 34rem;
+            margin: 0 auto;
+        }
+
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            margin-top: 2rem;
+            padding: .95rem 1.9rem;
+            background: var(--accent);
+            color: var(--on-accent);
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 1.05rem;
             text-decoration: none;
-            font-weight: 600;
+            box-shadow: var(--shadow);
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .16);
+        }
+
+        .byline {
+            margin-top: 1.2rem;
+            font-size: .95rem;
+            color: var(--ink-soft);
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem 2.6rem;
+            margin: 2.6rem 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .stats b {
+            display: block;
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .stats span {
+            font-size: .9rem;
+            color: var(--ink-soft);
+        }
+
+        /* ---------- sections ---------- */
+
+        section {
+            padding: 3.5rem 0;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 1.9rem);
+            margin: 0 0 1.8rem;
+            text-align: center;
+            letter-spacing: -.01em;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+            gap: 1.1rem;
+        }
+
+        .card {
+            background: var(--raised);
+            border: 1px solid var(--outline);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .card h3 {
+            margin: .8rem 0 .4rem;
+            font-size: 1.12rem;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--ink-soft);
+            font-size: .97rem;
+        }
+
+        .hex-icon {
+            width: 2.9rem;
+            height: 3.2rem;
+            display: grid;
+            place-items: center;
+            background: var(--cell);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            font-size: 1.4rem;
+        }
+
+        /* ---------- steps ---------- */
+
+        .steps {
+            counter-reset: step;
+            display: grid;
+            gap: 1rem;
+            max-width: 44rem;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            background: var(--raised);
+            border: 1px solid var(--outline);
+            border-radius: 1rem;
+            padding: 1.1rem 1.3rem;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            flex: 0 0 2rem;
+            height: 2rem;
+            display: grid;
+            place-items: center;
+            background: var(--accent);
+            color: var(--on-accent);
+            border-radius: 50%;
+            font-weight: 700;
+        }
+
+        .step p {
+            margin: 0;
+        }
+
+        /* ---------- languages ---------- */
+
+        .langs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: .7rem;
+            padding: 0;
+            list-style: none;
+        }
+
+        .langs li {
+            background: var(--cell);
+            border-radius: 999px;
+            padding: .5rem 1.1rem;
+            font-size: .95rem;
+        }
+
+        .note {
+            text-align: center;
+            color: var(--ink-soft);
+            margin-top: 1.2rem;
+        }
+
+        /* ---------- footer ---------- */
+
+        footer {
+            border-top: 1px solid var(--outline);
+            padding: 2.5rem 0 3rem;
+            text-align: center;
+            font-size: .95rem;
+            color: var(--ink-soft);
+        }
+
+        footer a {
+            color: var(--ink);
+        }
+
+        footer nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: .6rem 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 30rem) {
+            .hero {
+                padding-top: 4rem;
+            }
+
+            .lang-switch {
+                right: 1rem;
+                top: .8rem;
+            }
         }
     </style>
 </head>
 
 <body>
+
+    <header class="hero">
+        <svg class="hero-pattern" aria-hidden="true">
+            <defs>
+                <pattern id="comb" width="56" height="97" patternUnits="userSpaceOnUse" patternTransform="scale(.9)">
+                    <path d="M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z M28 64 L56 80 L56 112 M0 80 L28 64" fill="none"
+                        stroke="#B98F3E" stroke-width="2" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#comb)" />
+        </svg>
+
+        <div class="lang-switch" role="group" aria-label="Language / Dil">
+            <button type="button" data-lang="en" aria-pressed="true">EN</button>
+            <button type="button" data-lang="tr" aria-pressed="false">TR</button>
+        </div>
+
+        <div class="wrap">
+            <!-- Petek: seçili dile göre PUZZLE / KELİME -->
+            <svg class="comb" viewBox="0 0 260 240" role="img" aria-label="HexaWord honeycomb">
+                <g stroke="#B98F3E" stroke-width="2.5" stroke-linejoin="round">
+                    <polygon points="130,74 169.8,97 169.8,143 130,166 90.2,143 90.2,97" fill="#E2B15B" />
+                    <polygon points="90.2,5 130,28 130,74 90.2,97 50.3,74 50.3,28" fill="#F0EAD6" />
+                    <polygon points="169.8,5 209.7,28 209.7,74 169.8,97 130,74 130,28" fill="#F0EAD6" />
+                    <polygon points="209.7,74 249.5,97 249.5,143 209.7,166 169.8,143 169.8,97" fill="#F0EAD6" />
+                    <polygon points="169.8,143 209.7,166 209.7,212 169.8,235 130,212 130,166" fill="#F0EAD6" />
+                    <polygon points="90.2,143 130,166 130,212 90.2,235 50.3,212 50.3,166" fill="#F0EAD6" />
+                    <polygon points="50.3,74 90.2,97 90.2,143 50.3,166 10.5,143 10.5,97" fill="#F0EAD6" />
+                </g>
+                <g fill="#4A4238" font-family="system-ui, sans-serif" font-size="34" font-weight="700"
+                    text-anchor="middle" dominant-baseline="central">
+                    <g lang="en">
+                        <text x="90.2" y="51">P</text>
+                        <text x="169.8" y="51">U</text>
+                        <text x="209.7" y="120">Z</text>
+                        <text x="169.8" y="189">Z</text>
+                        <text x="90.2" y="189">L</text>
+                        <text x="50.3" y="120">E</text>
+                    </g>
+                    <g lang="tr">
+                        <text x="90.2" y="51">K</text>
+                        <text x="169.8" y="51">E</text>
+                        <text x="209.7" y="120">L</text>
+                        <text x="169.8" y="189">İ</text>
+                        <text x="90.2" y="189">M</text>
+                        <text x="50.3" y="120">E</text>
+                    </g>
+                </g>
+                <text x="130" y="120" font-size="36" text-anchor="middle" dominant-baseline="central">🍯</text>
+            </svg>
+
+            <h1>HexaWord</h1>
+
+            <p class="tagline" lang="en">
+                Connect letters on a hexagonal honeycomb and uncover the hidden words.
+                A calm word puzzle that plays offline.
+            </p>
+            <p class="tagline" lang="tr">
+                Altıgen petek üzerinde harfleri birleştir, gizli kelimeleri bul.
+                Sakin, internetsiz de oynanan bir kelime bulmacası.
+            </p>
+
+            <a class="cta" href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com">
+                <span lang="en">▶ Get it on Google Play</span>
+                <span lang="tr">▶ Google Play'de indir</span>
+            </a>
+
+            <p class="byline">
+                <span lang="en">Meok Apps · Android · Free</span>
+                <span lang="tr">Meok Apps · Android · Ücretsiz</span>
+            </p>
+
+            <ul class="stats">
+                <li><b>2000</b>
+                    <span lang="en">hand-written levels</span>
+                    <span lang="tr">elle yazılmış bölüm</span>
+                </li>
+                <li><b>4</b>
+                    <span lang="en">languages, 500 levels each</span>
+                    <span lang="tr">dil, her birinde 500 bölüm</span>
+                </li>
+                <li><b>3</b>
+                    <span lang="en">difficulty tiers</span>
+                    <span lang="tr">zorluk kademesi</span>
+                </li>
+                <li><b>0</b>
+                    <span lang="en">internet needed</span>
+                    <span lang="tr">internet gereksinimi</span>
+                </li>
+            </ul>
+        </div>
+    </header>
+
     <main>
-        <h1>🍯 HexaWord</h1>
-        <p>Altıgen petek üzerinde harfleri birleştirerek kelime bulma oyunu.
-            Dört dilde 2000 elle hazırlanmış bölüm, çevrimdışı oynanır.</p>
-        <a class="btn" href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com">Google Play'de
-            indir</a>
-        <p style="margin-top:2rem;font-size:.9rem">
-            Meok Apps · <a href="mailto:55mehmetokur@gmail.com">55mehmetokur@gmail.com</a>
-        </p>
+
+        <section class="wrap">
+            <h2 lang="en">What's in the game</h2>
+            <h2 lang="tr">Oyunda neler var</h2>
+
+            <div class="cards">
+
+                <article class="card">
+                    <div class="hex-icon">🧩</div>
+                    <h3 lang="en">2000 hand-written levels</h3>
+                    <h3 lang="tr">2000 elle hazırlanmış bölüm</h3>
+                    <p lang="en">Every level is written by hand and machine-verified for
+                        solvability. You will never be handed an unsolvable board.</p>
+                    <p lang="tr">Her bölüm elle yazıldı, çözülebilirliği makineyle denetlendi.
+                        Karşına asla çözümsüz bir tahta çıkmaz.</p>
+                </article>
+
+                <article class="card">
+                    <div class="hex-icon">📅</div>
+                    <h3 lang="en">Daily Puzzle</h3>
+                    <h3 lang="tr">Günün Bulmacası</h3>
+                    <p lang="en">A fresh honeycomb every day. Keep your streak alive, and make
+                        up the days you missed from the calendar.</p>
+                    <p lang="tr">Her gün yenilenen özel bir petek. Seriyi koru, kaçırdığın günü
+                        takvimden telafi et.</p>
+                </article>
+
+                <article class="card">
+                    <div class="hex-icon">🔍</div>
+                    <h3 lang="en">Bonus words</h3>
+                    <h3 lang="tr">Gizli kelimeler</h3>
+                    <p lang="en">Valid words you find beyond the target list fill your honey
+                        jar — fill it up and earn extra honey.</p>
+                    <p lang="tr">Hedef kelimelerin dışında bulduğun geçerli kelimeler bal
+                        kavanozunu doldurur; kavanoz dolunca ekstra bal kazanırsın.</p>
+                </article>
+
+                <article class="card">
+                    <div class="hex-icon">🎨</div>
+                    <h3 lang="en">Honeycomb shop</h3>
+                    <h3 lang="tr">Petek mağazası</h3>
+                    <p lang="en">Spend the honey you collect on new honeycomb looks. Cosmetic
+                        only — it never makes the puzzle easier.</p>
+                    <p lang="tr">Topladığın ballarla yeni petek görünümleri açılır. Oyunu
+                        kolaylaştırmaz, sadece güzelleştirir.</p>
+                </article>
+
+                <article class="card">
+                    <div class="hex-icon">🍯</div>
+                    <h3 lang="en">Honey and hints</h3>
+                    <h3 lang="tr">Bal ve ipuçları</h3>
+                    <p lang="en">Stuck? Reveal a letter or a whole word. Daily rewards and
+                        streaks keep the honey coming.</p>
+                    <p lang="tr">Takıldığında harf veya kelime ipucu al. Günlük ödüller ve seri
+                        takibiyle bal biriktir.</p>
+                </article>
+
+                <article class="card">
+                    <div class="hex-icon">✈️</div>
+                    <h3 lang="en">Plays offline</h3>
+                    <h3 lang="tr">Çevrimdışı oynanır</h3>
+                    <p lang="en">On the subway, on a plane, out of range. The levels live on
+                        your device, and so does your progress.</p>
+                    <p lang="tr">Metroda, uçakta, çekmeyen yerde. Bölümler cihazda; ilerlemen de
+                        cihazda kalır.</p>
+                </article>
+
+            </div>
+        </section>
+
+        <section class="wrap">
+            <h2 lang="en">How to play</h2>
+            <h2 lang="tr">Nasıl oynanır</h2>
+
+            <div class="steps">
+                <div class="step">
+                    <p lang="en">Swipe across neighbouring cells to connect letters. Words can
+                        bend in any direction.</p>
+                    <p lang="tr">Parmağını komşu hücreler boyunca kaydırarak harfleri birleştir.
+                        Kelimeler her yöne kıvrılabilir.</p>
+                </div>
+                <div class="step">
+                    <p lang="en">Find every hidden word to clear the board and collect your
+                        honey.</p>
+                    <p lang="tr">Tahtadaki tüm gizli kelimeleri bul, peteği temizle ve balını
+                        kazan.</p>
+                </div>
+                <div class="step">
+                    <p lang="en">Stuck? Take a hint, or hunt for bonus words to fill the jar —
+                        both run on honey.</p>
+                    <p lang="tr">Zorlandığında ipucu al ya da gizli kelimeler bulup kavanozu
+                        doldur — ikisi de baldan geçiyor.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="wrap">
+            <h2 lang="en">Languages</h2>
+            <h2 lang="tr">Diller</h2>
+
+            <ul class="langs" lang="en">
+                <li><b>Turkish</b> · 500 levels</li>
+                <li><b>English</b> · 500 levels</li>
+                <li><b>Spanish</b> · 500 levels</li>
+                <li><b>German</b> · 500 levels</li>
+            </ul>
+            <ul class="langs" lang="tr">
+                <li><b>Türkçe</b> · 500 bölüm</li>
+                <li><b>English</b> · 500 levels</li>
+                <li><b>Español</b> · 500 niveles</li>
+                <li><b>Deutsch</b> · 500 Level</li>
+            </ul>
+
+            <p class="note" lang="en">Each language has its own level set and its own
+                progress — finishing one doesn't touch the others.</p>
+            <p class="note" lang="tr">Her dilin kendi bölüm seti ve kendi ilerlemesi var;
+                birini bitirmek diğerini etkilemiyor.</p>
+        </section>
+
     </main>
+
+    <footer>
+        <div class="wrap">
+            <nav>
+                <a href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com">Google Play</a>
+                <a href="https://doc-hosting.flycricket.io/hexaword/970b1563-dbc1-4591-a747-57bf71116894/privacy">
+                    <span lang="en">Privacy Policy</span>
+                    <span lang="tr">Gizlilik Politikası</span>
+                </a>
+                <a href="mailto:55mehmetokur@gmail.com">
+                    <span lang="en">Contact</span>
+                    <span lang="tr">İletişim</span>
+                </a>
+            </nav>
+            <p>© <span id="y">2026</span> Meok Apps · HexaWord</p>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            var meta = {
+                en: {
+                    title: 'HexaWord — Hexagonal word puzzle | Meok Apps',
+                    desc: 'Connect letters on a hexagonal honeycomb to find hidden words. 2000 hand-written levels in four languages, Daily Puzzle, bonus words and offline play.',
+                    comb: 'HexaWord honeycomb spelling PUZZLE'
+                },
+                tr: {
+                    title: 'HexaWord — Altıgen petekte kelime bulmaca | Meok Apps',
+                    desc: 'Altıgen petek üzerinde harfleri birleştirerek kelime bul. Dört dilde 2000 elle hazırlanmış bölüm, Günün Bulmacası, gizli kelimeler ve çevrimdışı oynanış.',
+                    comb: 'KELİME yazan altıgen petek'
+                }
+            };
+
+            var buttons = document.querySelectorAll('.lang-switch button');
+            var description = document.querySelector('meta[name="description"]');
+            var comb = document.querySelector('.comb');
+
+            function setLang(lang) {
+                if (!meta[lang]) lang = 'en';
+                document.documentElement.setAttribute('data-lang', lang);
+                document.documentElement.setAttribute('lang', lang);
+                document.title = meta[lang].title;
+                if (description) description.setAttribute('content', meta[lang].desc);
+                if (comb) comb.setAttribute('aria-label', meta[lang].comb);
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].setAttribute('aria-pressed', buttons[i].dataset.lang === lang ? 'true' : 'false');
+                }
+                try { localStorage.setItem('hexaword-lang', lang); } catch (e) { }
+            }
+
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function () { setLang(this.dataset.lang); });
+            }
+
+            // Varsayılan İngilizce; daha önce TR seçtiyse o hatırlanıyor.
+            var saved = null;
+            try { saved = localStorage.getItem('hexaword-lang'); } catch (e) { }
+            if (saved === 'tr') setLang('tr');
+
+            document.getElementById('y').textContent = new Date().getFullYear();
+        })();
+    </script>
+
 </body>
 
 </html>
