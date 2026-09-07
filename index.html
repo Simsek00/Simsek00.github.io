@@ -4,630 +4,782 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HexaWord — Hexagonal word puzzle | Meok Apps</title>
+    <title>Meok Apps — Pitch Tactics &amp; HexaWord</title>
     <meta name="description"
-        content="Connect letters on a hexagonal honeycomb to find hidden words. 2000 hand-written levels in four languages, Daily Puzzle, bonus words and offline play.">
-    <meta name="theme-color" content="#E2B15B">
-    <link rel="icon"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%AF%3C/text%3E%3C/svg%3E">
+        content="Meok Apps makes offline Android games for people who would rather think than tap fast: Pitch Tactics, a turn-based football manager, and HexaWord, a hexagonal word puzzle.">
+    <meta name="theme-color" content="#F6F6F3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0C0E10" media="(prefers-color-scheme: dark)">
+    <link rel="canonical" href="https://simsek00.github.io/">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="HexaWord — Hexagonal word puzzle">
+    <meta property="og:site_name" content="Meok Apps">
+    <meta property="og:title" content="Meok Apps — Pitch Tactics &amp; HexaWord">
     <meta property="og:description"
-        content="2000 hand-written levels in four languages. Daily Puzzle, bonus words, cosmetic themes and offline play.">
+        content="Two offline Android games, made by one developer: a turn-based football manager and a hexagonal word puzzle.">
     <meta property="og:url" content="https://simsek00.github.io/">
+    <meta name="twitter:card" content="summary">
+
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 L28 9 V23 L16 30 L4 23 V9 Z' fill='%23B8934E'/%3E%3Cpath d='M16 9 L22.5 12.75 V20.25 L16 24 L9.5 20.25 V12.75 Z' fill='%23141719'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/assets/site.css">
+
+    <!-- Applied before first paint so the page never flashes the wrong
+         language or the wrong theme. -->
+    <script>
+        (function () {
+            var r = document.documentElement, lang = null, theme = null;
+            try { lang = localStorage.getItem('meok-lang'); theme = localStorage.getItem('meok-theme'); } catch (e) { }
+            if (lang !== 'tr' && lang !== 'en') {
+                lang = (navigator.language || 'en').toLowerCase().indexOf('tr') === 0 ? 'tr' : 'en';
+            }
+            r.setAttribute('data-lang', lang);
+            r.setAttribute('lang', lang);
+            if (theme === 'dark' || theme === 'light') r.setAttribute('data-theme', theme);
+        })();
+    </script>
 
     <style>
-        :root {
-            --surface: #F9F4E8;
-            --raised: #FFFFFF;
-            --ink: #4A4238;
-            --ink-soft: #7a705f;
-            --accent: #E2B15B;
-            --on-accent: #4A4238;
-            --cell: #F0EAD6;
-            --outline: rgba(74, 66, 56, .14);
-            --shadow: 0 2px 12px rgba(0, 0, 0, .07);
-            --hero-top: #F6E3BE;
-            --link: #a9761a;
+        /* ---- the two game panels, the only page-specific layout here ---- */
+
+        .game {
+            display: grid;
+            gap: 0;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
         }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --surface: #1E1A15;
-                --raised: #2A2520;
-                --ink: #F0EAD6;
-                --ink-soft: #b3a892;
-                --accent: #E2B15B;
-                --on-accent: #241F18;
-                --cell: #3A332B;
-                --outline: rgba(240, 234, 214, .16);
-                --shadow: 0 2px 14px rgba(0, 0, 0, .4);
-                --hero-top: #322717;
-                --link: #E2B15B;
+        .game+.game {
+            margin-top: 1.5rem;
+        }
+
+        @media (min-width: 58rem) {
+            .game {
+                grid-template-columns: 1.18fr .82fr;
+                align-items: stretch;
+            }
+
+            .game.flip .game-art {
+                order: -1;
+                border-inline-start: 0;
+                border-inline-end: 1px solid var(--line);
             }
         }
 
-        /* Dil anahtarı: yalnızca seçili dilin blokları görünür.
-     Yazı JS'ten gelmiyor, ikisi de sayfada duruyor — JS kapalıysa
-     bile İngilizcesi okunur. */
-        html[data-lang="en"] [lang="tr"] {
-            display: none;
+        .game-body {
+            padding: clamp(1.75rem, 4vw, 2.9rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        html[data-lang="tr"] [lang="en"] {
-            display: none;
+        .game-title {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: .3rem .75rem;
+            margin: 1rem 0 .1rem;
+            font-size: clamp(1.7rem, 3.6vw, 2.2rem);
         }
 
-        * {
-            box-sizing: border-box;
+        .game-title .sub {
+            font-family: var(--font-body);
+            font-size: .93rem;
+            font-weight: 500;
+            letter-spacing: 0;
+            color: var(--ink-3);
         }
 
-        body {
-            margin: 0;
-            background: var(--surface);
-            color: var(--ink);
-            font: 17px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-            -webkit-font-smoothing: antialiased;
+        .game-body .badge {
+            align-self: flex-start;
         }
 
-        .wrap {
-            max-width: 62rem;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+        .game-body>p {
+            margin: .9rem 0 1.4rem;
+            color: var(--ink-2);
+            max-width: 32rem;
         }
 
-        a {
-            color: var(--link);
+        .game-body .chips {
+            margin-bottom: 1.7rem;
         }
 
-        /* ---------- hero ---------- */
-
-        .hero {
+        .game-art {
             position: relative;
+            display: grid;
+            place-items: center;
+            padding: clamp(1.75rem, 5vw, 3rem);
+            border-block-start: 1px solid var(--line);
             overflow: hidden;
-            background: linear-gradient(180deg, var(--hero-top), var(--surface));
-            padding: 4.5rem 0 3.5rem;
-            text-align: center;
         }
 
-        .hero-pattern {
+        @media (min-width: 58rem) {
+            .game-art {
+                border-block-start: 0;
+                border-inline-start: 1px solid var(--line);
+            }
+        }
+
+        .game-art svg.art {
+            position: relative;
+            width: min(16.5rem, 66vw);
+            height: auto;
+            filter: drop-shadow(0 22px 46px rgba(10, 15, 20, .3));
+        }
+
+        .game-art .glow {
             position: absolute;
             inset: 0;
-            opacity: .16;
             pointer-events: none;
         }
 
-        .hero .wrap {
-            position: relative;
+        /* Each panel carries its own accent, so the button, the badge dot and
+           the chips inside it belong to that game rather than to the studio. */
+        .g-pitch {
+            --accent: #2E7D5B;
+            --accent-ink: #FFFFFF;
+            --accent-soft: rgba(46, 125, 91, .1);
         }
 
-        .lang-switch {
-            position: absolute;
-            top: 1rem;
-            right: 1.25rem;
-            z-index: 2;
-            display: flex;
-            gap: .2rem;
-            padding: .25rem;
-            background: var(--raised);
-            border: 1px solid var(--outline);
-            border-radius: 999px;
-            box-shadow: var(--shadow);
+        .g-pitch .game-art {
+            background: linear-gradient(165deg, #14352A, #0B211A);
         }
 
-        .lang-switch button {
-            border: 0;
-            margin: 0;
-            padding: .35rem .85rem;
-            background: none;
-            color: var(--ink-soft);
-            font: inherit;
-            font-size: .85rem;
-            font-weight: 700;
-            letter-spacing: .03em;
-            border-radius: 999px;
-            cursor: pointer;
+        .g-hex {
+            --accent: #A0700F;
+            --accent-ink: #2A2114;
+            --accent-soft: rgba(160, 112, 15, .12);
         }
 
-        .lang-switch button[aria-pressed="true"] {
-            background: var(--accent);
-            color: var(--on-accent);
+        .g-hex .game-art {
+            background: linear-gradient(165deg, #F6E3BE, #E9D3A6);
         }
 
-        .lang-switch button:focus-visible {
-            outline: 2px solid var(--ink);
-            outline-offset: 2px;
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) .g-pitch {
+                --accent: #6FC79A;
+                --accent-ink: #082115;
+                --accent-soft: rgba(111, 199, 154, .13);
+            }
+
+            :root:not([data-theme="light"]) .g-hex {
+                --accent: #E2B15B;
+                --accent-ink: #241F18;
+                --accent-soft: rgba(226, 177, 91, .14);
+            }
+
+            :root:not([data-theme="light"]) .g-hex .game-art {
+                background: linear-gradient(165deg, #3A2E1B, #241C10);
+            }
         }
 
-        .comb {
-            width: min(230px, 58vw);
+        :root[data-theme="dark"] .g-pitch {
+            --accent: #6FC79A;
+            --accent-ink: #082115;
+            --accent-soft: rgba(111, 199, 154, .13);
+        }
+
+        :root[data-theme="dark"] .g-hex {
+            --accent: #E2B15B;
+            --accent-ink: #241F18;
+            --accent-soft: rgba(226, 177, 91, .14);
+        }
+
+        :root[data-theme="dark"] .g-hex .game-art {
+            background: linear-gradient(165deg, #3A2E1B, #241C10);
+        }
+
+        /* ---- hero mark ---- */
+
+        .hero-mark {
+            width: min(19rem, 72vw);
             height: auto;
-            margin: 0 auto .5rem;
+            margin-inline: auto;
             display: block;
         }
 
-        h1 {
-            font-size: clamp(2.4rem, 7vw, 3.4rem);
-            margin: .4rem 0 .2rem;
-            letter-spacing: -.02em;
+        .about-note {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+            padding: clamp(1.5rem, 4vw, 2.4rem);
         }
 
-        .tagline {
-            font-size: clamp(1.05rem, 2.6vw, 1.25rem);
-            color: var(--ink-soft);
-            max-width: 34rem;
-            margin: 0 auto;
+        .about-note p {
+            margin: 0 0 1rem;
+            color: var(--ink-2);
         }
 
-        .cta {
-            display: inline-flex;
-            align-items: center;
-            gap: .6rem;
-            margin-top: 2rem;
-            padding: .95rem 1.9rem;
-            background: var(--accent);
-            color: var(--on-accent);
-            border-radius: 999px;
-            font-weight: 700;
-            font-size: 1.05rem;
-            text-decoration: none;
-            box-shadow: var(--shadow);
-            transition: transform .15s ease, box-shadow .15s ease;
-        }
-
-        .cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, .16);
-        }
-
-        .byline {
-            margin-top: 1.2rem;
-            font-size: .95rem;
-            color: var(--ink-soft);
-        }
-
-        .stats {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem 2.6rem;
-            margin: 2.6rem 0 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .stats b {
-            display: block;
-            font-size: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .stats span {
-            font-size: .9rem;
-            color: var(--ink-soft);
-        }
-
-        /* ---------- sections ---------- */
-
-        section {
-            padding: 3.5rem 0;
-        }
-
-        h2 {
-            font-size: clamp(1.5rem, 4vw, 1.9rem);
-            margin: 0 0 1.8rem;
-            text-align: center;
-            letter-spacing: -.01em;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-            gap: 1.1rem;
-        }
-
-        .card {
-            background: var(--raised);
-            border: 1px solid var(--outline);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-        }
-
-        .card h3 {
-            margin: .8rem 0 .4rem;
-            font-size: 1.12rem;
-        }
-
-        .card p {
-            margin: 0;
-            color: var(--ink-soft);
-            font-size: .97rem;
-        }
-
-        .hex-icon {
-            width: 2.9rem;
-            height: 3.2rem;
-            display: grid;
-            place-items: center;
-            background: var(--cell);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            font-size: 1.4rem;
-        }
-
-        /* ---------- steps ---------- */
-
-        .steps {
-            counter-reset: step;
-            display: grid;
-            gap: 1rem;
-            max-width: 44rem;
-            margin: 0 auto;
-        }
-
-        .step {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-            background: var(--raised);
-            border: 1px solid var(--outline);
-            border-radius: 1rem;
-            padding: 1.1rem 1.3rem;
-        }
-
-        .step::before {
-            counter-increment: step;
-            content: counter(step);
-            flex: 0 0 2rem;
-            height: 2rem;
-            display: grid;
-            place-items: center;
-            background: var(--accent);
-            color: var(--on-accent);
-            border-radius: 50%;
-            font-weight: 700;
-        }
-
-        .step p {
-            margin: 0;
-        }
-
-        /* ---------- languages ---------- */
-
-        .langs {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: .7rem;
-            padding: 0;
-            list-style: none;
-        }
-
-        .langs li {
-            background: var(--cell);
-            border-radius: 999px;
-            padding: .5rem 1.1rem;
-            font-size: .95rem;
-        }
-
-        .note {
-            text-align: center;
-            color: var(--ink-soft);
-            margin-top: 1.2rem;
-        }
-
-        /* ---------- footer ---------- */
-
-        footer {
-            border-top: 1px solid var(--outline);
-            padding: 2.5rem 0 3rem;
-            text-align: center;
-            font-size: .95rem;
-            color: var(--ink-soft);
-        }
-
-        footer a {
-            color: var(--ink);
-        }
-
-        footer nav {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: .6rem 1.4rem;
-            margin-bottom: 1rem;
-        }
-
-        @media (max-width: 30rem) {
-            .hero {
-                padding-top: 4rem;
-            }
-
-            .lang-switch {
-                right: 1rem;
-                top: .8rem;
-            }
+        .about-note p:last-child {
+            margin-bottom: 0;
         }
     </style>
 </head>
 
-<body>
+<body class="t-studio">
 
-    <header class="hero">
-        <svg class="hero-pattern" aria-hidden="true">
-            <defs>
-                <pattern id="comb" width="56" height="97" patternUnits="userSpaceOnUse" patternTransform="scale(.9)">
-                    <path d="M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z M28 64 L56 80 L56 112 M0 80 L28 64" fill="none"
-                        stroke="#B98F3E" stroke-width="2" />
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#comb)" />
-        </svg>
+    <a class="skip-link" href="#main">
+        <span lang="en">Skip to content</span>
+        <span lang="tr">İçeriğe geç</span>
+    </a>
 
-        <div class="lang-switch" role="group" aria-label="Language / Dil">
-            <button type="button" data-lang="en" aria-pressed="true">EN</button>
-            <button type="button" data-lang="tr" aria-pressed="false">TR</button>
-        </div>
-
+    <header class="site-header">
         <div class="wrap">
-            <!-- Petek: seçili dile göre PUZZLE / KELİME -->
-            <svg class="comb" viewBox="0 0 260 240" role="img" aria-label="HexaWord honeycomb">
-                <g stroke="#B98F3E" stroke-width="2.5" stroke-linejoin="round">
-                    <polygon points="130,74 169.8,97 169.8,143 130,166 90.2,143 90.2,97" fill="#E2B15B" />
-                    <polygon points="90.2,5 130,28 130,74 90.2,97 50.3,74 50.3,28" fill="#F0EAD6" />
-                    <polygon points="169.8,5 209.7,28 209.7,74 169.8,97 130,74 130,28" fill="#F0EAD6" />
-                    <polygon points="209.7,74 249.5,97 249.5,143 209.7,166 169.8,143 169.8,97" fill="#F0EAD6" />
-                    <polygon points="169.8,143 209.7,166 209.7,212 169.8,235 130,212 130,166" fill="#F0EAD6" />
-                    <polygon points="90.2,143 130,166 130,212 90.2,235 50.3,212 50.3,166" fill="#F0EAD6" />
-                    <polygon points="50.3,74 90.2,97 90.2,143 50.3,166 10.5,143 10.5,97" fill="#F0EAD6" />
-                </g>
-                <g fill="#4A4238" font-family="system-ui, sans-serif" font-size="34" font-weight="700"
-                    text-anchor="middle" dominant-baseline="central">
-                    <g lang="en">
-                        <text x="90.2" y="51">P</text>
-                        <text x="169.8" y="51">U</text>
-                        <text x="209.7" y="120">Z</text>
-                        <text x="169.8" y="189">Z</text>
-                        <text x="90.2" y="189">L</text>
-                        <text x="50.3" y="120">E</text>
-                    </g>
-                    <g lang="tr">
-                        <text x="90.2" y="51">K</text>
-                        <text x="169.8" y="51">E</text>
-                        <text x="209.7" y="120">L</text>
-                        <text x="169.8" y="189">İ</text>
-                        <text x="90.2" y="189">M</text>
-                        <text x="50.3" y="120">E</text>
-                    </g>
-                </g>
-                <text x="130" y="120" font-size="36" text-anchor="middle" dominant-baseline="central">🍯</text>
-            </svg>
-
-            <h1>HexaWord</h1>
-
-            <p class="tagline" lang="en">
-                Connect letters on a hexagonal honeycomb and uncover the hidden words.
-                A calm word puzzle that plays offline.
-            </p>
-            <p class="tagline" lang="tr">
-                Altıgen petek üzerinde harfleri birleştir, gizli kelimeleri bul.
-                Sakin, internetsiz de oynanan bir kelime bulmacası.
-            </p>
-
-            <a class="cta" href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com">
-                <span lang="en">▶ Get it on Google Play</span>
-                <span lang="tr">▶ Google Play'de indir</span>
+            <a class="brand" href="/" aria-label="Meok Apps">
+                <svg width="24" height="26" viewBox="0 0 24 26" aria-hidden="true">
+                    <path d="M12 1 L22.4 7 V19 L12 25 L1.6 19 V7 Z" fill="currentColor" opacity=".12" />
+                    <path d="M12 1 L22.4 7 V19 L12 25 L1.6 19 V7 Z" fill="none" stroke="currentColor"
+                        stroke-width="1.5" />
+                    <path d="M12 7.6 L17.2 10.6 V16.6 L12 19.6 L6.8 16.6 V10.6 Z" fill="currentColor" />
+                </svg>
+                Meok Apps
             </a>
 
-            <p class="byline">
-                <span lang="en">Meok Apps · Android · Free</span>
-                <span lang="tr">Meok Apps · Android · Ücretsiz</span>
-            </p>
+            <nav class="nav" aria-label="Main">
+                <a href="#games">
+                    <span lang="en">Games</span><span lang="tr">Oyunlar</span>
+                </a>
+                <a href="/pitch-tactics/">Pitch Tactics</a>
+                <a href="/hexaword/">HexaWord</a>
+            </nav>
 
-            <ul class="stats">
-                <li><b>2000</b>
-                    <span lang="en">hand-written levels</span>
-                    <span lang="tr">elle yazılmış bölüm</span>
-                </li>
-                <li><b>4</b>
-                    <span lang="en">languages, 500 levels each</span>
-                    <span lang="tr">dil, her birinde 500 bölüm</span>
-                </li>
-                <li><b>3</b>
-                    <span lang="en">difficulty tiers</span>
-                    <span lang="tr">zorluk kademesi</span>
-                </li>
-                <li><b>0</b>
-                    <span lang="en">internet needed</span>
-                    <span lang="tr">internet gereksinimi</span>
-                </li>
-            </ul>
+            <div class="controls">
+                <div class="switch" role="group" aria-label="Language / Dil">
+                    <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+                    <button type="button" data-set-lang="tr" aria-pressed="false">TR</button>
+                </div>
+                <button type="button" class="icon-btn" data-toggle-theme aria-label="Switch theme">
+                    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4.5" />
+                        <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" />
+                    </svg>
+                    <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </header>
 
-    <main>
+    <main id="main">
 
-        <section class="wrap">
-            <h2 lang="en">What's in the game</h2>
-            <h2 lang="tr">Oyunda neler var</h2>
+        <!-- ============================ hero ============================ -->
+        <div class="hero">
+            <svg class="hero-pattern" aria-hidden="true">
+                <defs>
+                    <pattern id="hexgrid" width="56" height="97" patternUnits="userSpaceOnUse"
+                        patternTransform="scale(.85)">
+                        <path d="M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z M28 64 L56 80 L56 112 M0 80 L28 64"
+                            fill="none" stroke="currentColor" stroke-width="1.4" />
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#hexgrid)" />
+            </svg>
 
-            <div class="cards">
+            <div class="wrap">
+                <div style="max-width:44rem">
+                    <p class="eyebrow">
+                        <span lang="en">Independent studio · Android</span>
+                        <span lang="tr">Bağımsız stüdyo · Android</span>
+                    </p>
 
-                <article class="card">
-                    <div class="hex-icon">🧩</div>
-                    <h3 lang="en">2000 hand-written levels</h3>
-                    <h3 lang="tr">2000 elle hazırlanmış bölüm</h3>
-                    <p lang="en">Every level is written by hand and machine-verified for
-                        solvability. You will never be handed an unsolvable board.</p>
-                    <p lang="tr">Her bölüm elle yazıldı, çözülebilirliği makineyle denetlendi.
-                        Karşına asla çözümsüz bir tahta çıkmaz.</p>
+                    <h1>
+                        <span lang="en">Small games, made&nbsp;carefully.</span>
+                        <span lang="tr">Küçük oyunlar, özenle&nbsp;yapılmış.</span>
+                    </h1>
+
+                    <p class="lede" lang="en">
+                        Meok Apps builds offline Android games for people who would rather
+                        think than tap fast. Two so far: a turn-based football manager and a
+                        hexagonal word puzzle. No accounts, no energy timers, no signal
+                        required.
+                    </p>
+                    <p class="lede" lang="tr">
+                        Meok Apps, hızlı refleks yerine düşünmeyi sevenler için çevrimdışı
+                        Android oyunları yapıyor. Şimdilik iki tane: sıra tabanlı bir futbol
+                        menajerlik oyunu ve altıgen bir kelime bulmacası. Hesap yok, enerji
+                        sayacı yok, çekmesi de gerekmiyor.
+                    </p>
+
+                    <div class="btn-row">
+                        <a class="btn btn-primary" href="#games">
+                            <span lang="en">See both games</span>
+                            <span lang="tr">İki oyuna da bak</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 5v14M5 12l7 7 7-7" />
+                            </svg>
+                        </a>
+                        <a class="btn btn-ghost" href="mailto:55mehmetokur@gmail.com">
+                            <span lang="en">Get in touch</span>
+                            <span lang="tr">İletişime geç</span>
+                        </a>
+                    </div>
+                </div>
+
+                <ul class="stats">
+                    <li>
+                        <b>2</b>
+                        <span lang="en">games on Android</span>
+                        <span lang="tr">Android oyunu</span>
+                    </li>
+                    <li>
+                        <b>8</b>
+                        <span lang="en">languages across the catalogue</span>
+                        <span lang="tr">dil, iki oyunun toplamı</span>
+                    </li>
+                    <li>
+                        <b>0</b>
+                        <span lang="en">accounts to create</span>
+                        <span lang="tr">açman gereken hesap</span>
+                    </li>
+                    <li>
+                        <b>0</b>
+                        <span lang="en">internet needed to play</span>
+                        <span lang="tr">oynamak için internet</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="rule">
+
+        <!-- ============================ games ============================ -->
+        <section id="games">
+            <div class="wrap">
+                <div class="section-head">
+                    <p class="eyebrow">
+                        <span lang="en">The catalogue</span>
+                        <span lang="tr">Katalog</span>
+                    </p>
+                    <h2>
+                        <span lang="en">Two games, one idea behind both</span>
+                        <span lang="tr">İki oyun, ikisinin ardında tek fikir</span>
+                    </h2>
+                    <p lang="en">
+                        Take your time, play offline, and keep whatever you earn. One is
+                        about a football club, the other about a honeycomb full of letters.
+                    </p>
+                    <p lang="tr">
+                        Acele etme, çevrimdışı oyna, kazandığın sende kalsın. Biri bir futbol
+                        kulübü hakkında, diğeri harflerle dolu bir petek hakkında.
+                    </p>
+                </div>
+
+                <!-- ---------- Pitch Tactics ---------- -->
+                <article class="game g-pitch reveal">
+                    <div class="game-body">
+                        <span class="badge soon">
+                            <span class="dot"></span>
+                            <span lang="en">Coming soon to Google Play</span>
+                            <span lang="tr">Yakında Google Play'de</span>
+                        </span>
+
+                        <h3 class="game-title">
+                            Pitch Tactics
+                            <span class="sub" lang="en">Soccer Manager</span>
+                            <span class="sub" lang="tr">Futbol menajerliği</span>
+                        </h3>
+
+                        <p lang="en">
+                            Take over a club in one of ten countries and run it season after
+                            season: pick the shape, work the transfer market, send scouts
+                            abroad, keep the board on your side. Matches play out minute by
+                            minute with commentary — and you can pause one to change it.
+                        </p>
+                        <p lang="tr">
+                            On ülkeden birinde bir kulübün başına geç ve sezon sezon yönet:
+                            dizilişi kur, transfer piyasasında çalış, yurt dışına gözlemci
+                            yolla, yönetim kurulunu yanında tut. Maçlar dakika dakika, anlatımla
+                            akıyor — istersen duraklatıp müdahale ediyorsun.
+                        </p>
+
+                        <ul class="chips">
+                            <li><b>10</b> <span lang="en">countries</span><span lang="tr">ülke</span></li>
+                            <li><b>20</b> <span lang="en">leagues</span><span lang="tr">lig</span></li>
+                            <li><b>364</b> <span lang="en">clubs</span><span lang="tr">kulüp</span></li>
+                            <li><b>3</b> <span lang="en">cups</span><span lang="tr">kupa</span></li>
+                            <li><b>8</b> <span lang="en">languages</span><span lang="tr">dil</span></li>
+                        </ul>
+
+                        <div class="btn-row">
+                            <a class="btn btn-primary" href="/pitch-tactics/">
+                                <span lang="en">Explore Pitch Tactics</span>
+                                <span lang="tr">Pitch Tactics'i incele</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="game-art">
+                        <svg class="art" viewBox="0 0 300 460" role="img"
+                            aria-labelledby="pitch-art-title">
+                            <title id="pitch-art-title">A football pitch seen from above, with a team set
+                                up in a 4-3-3</title>
+                            <defs>
+                                <clipPath id="pitchClip">
+                                    <rect x="10" y="10" width="280" height="440" rx="16" />
+                                </clipPath>
+                            </defs>
+
+                            <rect x="10" y="10" width="280" height="440" rx="16" fill="#1E5B41" />
+                            <g clip-path="url(#pitchClip)">
+                                <rect x="10" y="10" width="280" height="44" fill="#22684A" />
+                                <rect x="10" y="98" width="280" height="44" fill="#22684A" />
+                                <rect x="10" y="186" width="280" height="44" fill="#22684A" />
+                                <rect x="10" y="274" width="280" height="44" fill="#22684A" />
+                                <rect x="10" y="362" width="280" height="44" fill="#22684A" />
+                            </g>
+
+                            <g fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2">
+                                <rect x="24" y="24" width="252" height="412" />
+                                <path d="M24 230 H276" />
+                                <circle cx="150" cy="230" r="42" />
+                                <rect x="72" y="24" width="156" height="60" />
+                                <rect x="112" y="24" width="76" height="24" />
+                                <rect x="72" y="376" width="156" height="60" />
+                                <rect x="112" y="412" width="76" height="24" />
+                                <path d="M24 34 A10 10 0 0 0 34 24" />
+                                <path d="M266 24 A10 10 0 0 0 276 34" />
+                                <path d="M24 426 A10 10 0 0 1 34 436" />
+                                <path d="M276 426 A10 10 0 0 0 266 436" />
+                            </g>
+                            <g fill="rgba(255,255,255,.55)">
+                                <circle cx="150" cy="230" r="3" />
+                                <circle cx="150" cy="66" r="3" />
+                                <circle cx="150" cy="394" r="3" />
+                            </g>
+
+                            <!-- the pass being played, dashed -->
+                            <path d="M150 288 Q198 244 218 178" fill="none" stroke="#E9C97B" stroke-width="2.4"
+                                stroke-dasharray="7 6" stroke-linecap="round" opacity=".95" />
+                            <path d="M218 178 l-7.5 9 l11 1.5 z" fill="#E9C97B" opacity=".95" />
+
+                            <!-- 4-3-3, attacking up the page -->
+                            <g stroke="#0F3227" stroke-width="2">
+                                <circle cx="150" cy="410" r="9" fill="#D9AC63" />
+                                <circle cx="62" cy="352" r="9" fill="#EDF1F3" />
+                                <circle cx="118" cy="366" r="9" fill="#EDF1F3" />
+                                <circle cx="182" cy="366" r="9" fill="#EDF1F3" />
+                                <circle cx="238" cy="352" r="9" fill="#EDF1F3" />
+                                <circle cx="90" cy="274" r="9" fill="#EDF1F3" />
+                                <circle cx="150" cy="288" r="9" fill="#EDF1F3" />
+                                <circle cx="210" cy="274" r="9" fill="#EDF1F3" />
+                                <circle cx="78" cy="168" r="9" fill="#EDF1F3" />
+                                <circle cx="150" cy="140" r="9" fill="#EDF1F3" />
+                                <circle cx="218" cy="168" r="9" fill="#EDF1F3" />
+                            </g>
+                        </svg>
+                    </div>
                 </article>
 
-                <article class="card">
-                    <div class="hex-icon">📅</div>
-                    <h3 lang="en">Daily Puzzle</h3>
-                    <h3 lang="tr">Günün Bulmacası</h3>
-                    <p lang="en">A fresh honeycomb every day. Keep your streak alive, and make
-                        up the days you missed from the calendar.</p>
-                    <p lang="tr">Her gün yenilenen özel bir petek. Seriyi koru, kaçırdığın günü
-                        takvimden telafi et.</p>
-                </article>
+                <!-- ---------- HexaWord ---------- -->
+                <article class="game g-hex flip reveal">
+                    <div class="game-body">
+                        <span class="badge live">
+                            <span class="dot"></span>
+                            <span lang="en">On Google Play</span>
+                            <span lang="tr">Google Play'de</span>
+                        </span>
 
-                <article class="card">
-                    <div class="hex-icon">🔍</div>
-                    <h3 lang="en">Bonus words</h3>
-                    <h3 lang="tr">Gizli kelimeler</h3>
-                    <p lang="en">Valid words you find beyond the target list fill your honey
-                        jar — fill it up and earn extra honey.</p>
-                    <p lang="tr">Hedef kelimelerin dışında bulduğun geçerli kelimeler bal
-                        kavanozunu doldurur; kavanoz dolunca ekstra bal kazanırsın.</p>
-                </article>
+                        <h3 class="game-title">
+                            HexaWord
+                            <span class="sub" lang="en">Hexagonal word puzzle</span>
+                            <span class="sub" lang="tr">Altıgen kelime bulmacası</span>
+                        </h3>
 
-                <article class="card">
-                    <div class="hex-icon">🎨</div>
-                    <h3 lang="en">Honeycomb shop</h3>
-                    <h3 lang="tr">Petek mağazası</h3>
-                    <p lang="en">Spend the honey you collect on new honeycomb looks. Cosmetic
-                        only — it never makes the puzzle easier.</p>
-                    <p lang="tr">Topladığın ballarla yeni petek görünümleri açılır. Oyunu
-                        kolaylaştırmaz, sadece güzelleştirir.</p>
-                </article>
+                        <p lang="en">
+                            Swipe across a honeycomb to connect letters and uncover the hidden
+                            words. 2000 hand-written levels across four languages, a fresh
+                            Daily Puzzle, bonus words that fill your honey jar, and nothing
+                            that needs a connection.
+                        </p>
+                        <p lang="tr">
+                            Petek üzerinde parmağını kaydırarak harfleri birleştir, gizli
+                            kelimeleri ortaya çıkar. Dört dilde 2000 elle yazılmış bölüm, her
+                            gün yenilenen bir bulmaca, bal kavanozunu dolduran gizli kelimeler
+                            ve bağlantı isteyen hiçbir şey.
+                        </p>
 
-                <article class="card">
-                    <div class="hex-icon">🍯</div>
-                    <h3 lang="en">Honey and hints</h3>
-                    <h3 lang="tr">Bal ve ipuçları</h3>
-                    <p lang="en">Stuck? Reveal a letter or a whole word. Daily rewards and
-                        streaks keep the honey coming.</p>
-                    <p lang="tr">Takıldığında harf veya kelime ipucu al. Günlük ödüller ve seri
-                        takibiyle bal biriktir.</p>
-                </article>
+                        <ul class="chips">
+                            <li><b>2000</b> <span lang="en">levels</span><span lang="tr">bölüm</span></li>
+                            <li><b>4</b> <span lang="en">languages</span><span lang="tr">dil</span></li>
+                            <li><span lang="en">Daily Puzzle</span><span lang="tr">Günün Bulmacası</span></li>
+                            <li><span lang="en">Offline</span><span lang="tr">Çevrimdışı</span></li>
+                        </ul>
 
-                <article class="card">
-                    <div class="hex-icon">✈️</div>
-                    <h3 lang="en">Plays offline</h3>
-                    <h3 lang="tr">Çevrimdışı oynanır</h3>
-                    <p lang="en">On the subway, on a plane, out of range. The levels live on
-                        your device, and so does your progress.</p>
-                    <p lang="tr">Metroda, uçakta, çekmeyen yerde. Bölümler cihazda; ilerlemen de
-                        cihazda kalır.</p>
-                </article>
+                        <div class="btn-row">
+                            <a class="btn btn-primary" href="/hexaword/">
+                                <span lang="en">Explore HexaWord</span>
+                                <span lang="tr">HexaWord'ü incele</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                            <a class="btn btn-ghost"
+                                href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com">
+                                <svg width="15" height="17" viewBox="0 0 20 22" aria-hidden="true">
+                                    <path d="M1.4.7 12 11 1.4 21.3A2 2 0 0 1 1 20V2A2 2 0 0 1 1.4.7Z"
+                                        fill="currentColor" opacity=".85" />
+                                    <path d="M13.4 12.4 16 15l-11.4 6.6L13.4 12.4Z" fill="currentColor" opacity=".6" />
+                                    <path d="M13.4 9.6 4.6.4 16 7l-2.6 2.6Z" fill="currentColor" opacity=".6" />
+                                    <path d="M16.6 7.4 19.4 9a2 2 0 0 1 0 4l-2.8 1.6L14 11l2.6-3.6Z"
+                                        fill="currentColor" />
+                                </svg>
+                                Google Play
+                            </a>
+                        </div>
+                    </div>
 
+                    <div class="game-art">
+                        <svg class="art" viewBox="0 0 260 240" role="img" aria-labelledby="hex-art-title">
+                            <title id="hex-art-title">A honeycomb of seven cells with a honey pot in the
+                                middle</title>
+                            <g stroke="#B98F3E" stroke-width="2.5" stroke-linejoin="round">
+                                <polygon points="130,74 169.8,97 169.8,143 130,166 90.2,143 90.2,97" fill="#E2B15B" />
+                                <polygon points="90.2,5 130,28 130,74 90.2,97 50.3,74 50.3,28" fill="#F5EAD2" />
+                                <polygon points="169.8,5 209.7,28 209.7,74 169.8,97 130,74 130,28" fill="#F5EAD2" />
+                                <polygon points="209.7,74 249.5,97 249.5,143 209.7,166 169.8,143 169.8,97"
+                                    fill="#F5EAD2" />
+                                <polygon points="169.8,143 209.7,166 209.7,212 169.8,235 130,212 130,166"
+                                    fill="#F5EAD2" />
+                                <polygon points="90.2,143 130,166 130,212 90.2,235 50.3,212 50.3,166" fill="#F5EAD2" />
+                                <polygon points="50.3,74 90.2,97 90.2,143 50.3,166 10.5,143 10.5,97" fill="#F5EAD2" />
+                            </g>
+                            <g fill="#4A4238" font-family="'Space Grotesk', system-ui, sans-serif" font-size="34"
+                                font-weight="700" text-anchor="middle" dominant-baseline="central">
+                                <g lang="en">
+                                    <text x="90.2" y="51">P</text>
+                                    <text x="169.8" y="51">U</text>
+                                    <text x="209.7" y="120">Z</text>
+                                    <text x="169.8" y="189">Z</text>
+                                    <text x="90.2" y="189">L</text>
+                                    <text x="50.3" y="120">E</text>
+                                </g>
+                                <g lang="tr">
+                                    <text x="90.2" y="51">K</text>
+                                    <text x="169.8" y="51">E</text>
+                                    <text x="209.7" y="120">L</text>
+                                    <text x="169.8" y="189">İ</text>
+                                    <text x="90.2" y="189">M</text>
+                                    <text x="50.3" y="120">E</text>
+                                </g>
+                            </g>
+                            <text x="130" y="120" font-size="36" text-anchor="middle"
+                                dominant-baseline="central">🍯</text>
+                        </svg>
+                    </div>
+                </article>
             </div>
         </section>
 
-        <section class="wrap">
-            <h2 lang="en">How to play</h2>
-            <h2 lang="tr">Nasıl oynanır</h2>
+        <hr class="rule">
 
-            <div class="steps">
-                <div class="step">
-                    <p lang="en">Swipe across neighbouring cells to connect letters. Words can
-                        bend in any direction.</p>
-                    <p lang="tr">Parmağını komşu hücreler boyunca kaydırarak harfleri birleştir.
-                        Kelimeler her yöne kıvrılabilir.</p>
+        <!-- ========================= principles ========================= -->
+        <section id="principles">
+            <div class="wrap">
+                <div class="section-head center">
+                    <p class="eyebrow plain">
+                        <span lang="en">What both games have in common</span>
+                        <span lang="tr">İki oyunun ortak noktası</span>
+                    </p>
+                    <h2>
+                        <span lang="en">The rules I hold myself to</span>
+                        <span lang="tr">Kendime koyduğum kurallar</span>
+                    </h2>
                 </div>
-                <div class="step">
-                    <p lang="en">Find every hidden word to clear the board and collect your
-                        honey.</p>
-                    <p lang="tr">Tahtadaki tüm gizli kelimeleri bul, peteği temizle ve balını
-                        kazan.</p>
-                </div>
-                <div class="step">
-                    <p lang="en">Stuck? Take a hint, or hunt for bonus words to fill the jar —
-                        both run on honey.</p>
-                    <p lang="tr">Zorlandığında ipucu al ya da gizli kelimeler bulup kavanozu
-                        doldur — ikisi de baldan geçiyor.</p>
-                </div>
+
+                <ul class="facts reveal">
+                    <li>
+                        <b lang="en">They work with no signal</b>
+                        <b lang="tr">Çekmeyen yerde de çalışır</b>
+                        <span lang="en">Levels, squads and seasons live on your device. On a
+                            plane or on the metro, nothing stops.</span>
+                        <span lang="tr">Bölümler, kadrolar ve sezonlar cihazında duruyor. Uçakta
+                            da metroda da hiçbir şey durmuyor.</span>
+                    </li>
+                    <li>
+                        <b lang="en">No account, ever</b>
+                        <b lang="tr">Hiçbir zaman hesap yok</b>
+                        <span lang="en">No sign-up, no login, no e-mail asked for. You open the
+                            app and you are already playing.</span>
+                        <span lang="tr">Kayıt yok, giriş yok, e-posta sorulmuyor. Uygulamayı
+                            açtığın anda oynuyorsun.</span>
+                    </li>
+                    <li>
+                        <b lang="en">Your progress stays yours</b>
+                        <b lang="tr">İlerlemen sende kalır</b>
+                        <span lang="en">Saves are written to the device, not to a server. Nothing
+                            about your career leaves the phone.</span>
+                        <span lang="tr">Kayıtlar sunucuya değil cihaza yazılıyor. Kariyerine dair
+                            hiçbir şey telefondan çıkmıyor.</span>
+                    </li>
+                    <li>
+                        <b lang="en">No energy timers</b>
+                        <b lang="tr">Enerji sayacı yok</b>
+                        <span lang="en">Nothing waits for a countdown to refill. Play one level or
+                            a whole season in a sitting.</span>
+                        <span lang="tr">Dolmasını bekleyeceğin bir sayaç yok. Tek oturuşta bir
+                            bölüm de oynarsın, bir sezon da.</span>
+                    </li>
+                </ul>
             </div>
         </section>
 
-        <section class="wrap">
-            <h2 lang="en">Languages</h2>
-            <h2 lang="tr">Diller</h2>
+        <hr class="rule">
 
-            <ul class="langs" lang="en">
-                <li><b>Turkish</b> · 500 levels</li>
-                <li><b>English</b> · 500 levels</li>
-                <li><b>Spanish</b> · 500 levels</li>
-                <li><b>German</b> · 500 levels</li>
-            </ul>
-            <ul class="langs" lang="tr">
-                <li><b>Türkçe</b> · 500 bölüm</li>
-                <li><b>English</b> · 500 levels</li>
-                <li><b>Español</b> · 500 niveles</li>
-                <li><b>Deutsch</b> · 500 Level</li>
-            </ul>
+        <!-- ============================ about ============================ -->
+        <section id="about">
+            <div class="wrap narrow">
+                <div class="section-head">
+                    <p class="eyebrow">
+                        <span lang="en">About</span>
+                        <span lang="tr">Hakkında</span>
+                    </p>
+                    <h2>
+                        <span lang="en">One developer, two games</span>
+                        <span lang="tr">Bir geliştirici, iki oyun</span>
+                    </h2>
+                </div>
 
-            <p class="note" lang="en">Each language has its own level set and its own
-                progress — finishing one doesn't touch the others.</p>
-            <p class="note" lang="tr">Her dilin kendi bölüm seti ve kendi ilerlemesi var;
-                birini bitirmek diğerini etkilemiyor.</p>
+                <div class="about-note reveal">
+                    <p lang="en">
+                        Meok Apps is one person writing both games in Flutter and shipping them
+                        on Android. That is small enough that every level in HexaWord was
+                        written by hand, and every number in the Pitch Tactics match engine was
+                        tuned against the rest of it until a season felt right.
+                    </p>
+                    <p lang="tr">
+                        Meok Apps, iki oyunu da Flutter ile yazıp Android'de yayımlayan tek bir
+                        kişi. Bu kadar küçük olmasının bir sonucu var: HexaWord'deki her bölüm
+                        elle yazıldı, Pitch Tactics'in maç motorundaki her sayı da bir sezon
+                        doğru hissettirene kadar diğerlerine göre ayarlandı.
+                    </p>
+                    <p lang="en">
+                        Every club, competition and player in Pitch Tactics is fictional — no
+                        real crests, no licensed names. Found a bug, or want a language added?
+                        <a href="mailto:55mehmetokur@gmail.com">Write to me</a>; it is the same
+                        inbox that answers store reviews.
+                    </p>
+                    <p lang="tr">
+                        Pitch Tactics'teki her kulüp, turnuva ve oyuncu kurgusal — gerçek arma
+                        yok, lisanslı isim yok. Bir hata bulduysan ya da bir dil eklenmesini
+                        istiyorsan <a href="mailto:55mehmetokur@gmail.com">bana yaz</a>; mağaza
+                        yorumlarına da aynı kutudan cevap veriyorum.
+                    </p>
+                </div>
+            </div>
         </section>
 
     </main>
 
-    <footer>
+    <footer class="site-footer">
         <div class="wrap">
-            <nav>
-                <a href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com">Google Play</a>
-                <a href="https://doc-hosting.flycricket.io/hexaword/970b1563-dbc1-4591-a747-57bf71116894/privacy">
-                    <span lang="en">Privacy Policy</span>
-                    <span lang="tr">Gizlilik Politikası</span>
-                </a>
-                <a href="mailto:55mehmetokur@gmail.com">
-                    <span lang="en">Contact</span>
-                    <span lang="tr">İletişim</span>
-                </a>
-            </nav>
-            <p>© <span id="y">2026</span> Meok Apps · HexaWord</p>
+            <div class="footer-grid">
+                <div>
+                    <h3>
+                        <span lang="en">Games</span><span lang="tr">Oyunlar</span>
+                    </h3>
+                    <ul>
+                        <li><a href="/pitch-tactics/">Pitch Tactics: Soccer Manager</a></li>
+                        <li><a href="/hexaword/">HexaWord</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Google Play</h3>
+                    <ul>
+                        <li>
+                            <a href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com">
+                                HexaWord
+                            </a>
+                        </li>
+                        <li>
+                            <span lang="en">Pitch Tactics — coming soon</span>
+                            <span lang="tr">Pitch Tactics — yakında</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>
+                        <span lang="en">Privacy</span><span lang="tr">Gizlilik</span>
+                    </h3>
+                    <ul>
+                        <li>
+                            <a
+                                href="https://doc-hosting.flycricket.io/hexaword/970b1563-dbc1-4591-a747-57bf71116894/privacy">
+                                HexaWord
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://doc-hosting.flycricket.io/pitch-tactics-soccer-manager-privacy-policy/908ac948-a4ae-41bf-bb8a-5cbdbc6634ae/privacy">
+                                Pitch Tactics
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>
+                        <span lang="en">Contact</span><span lang="tr">İletişim</span>
+                    </h3>
+                    <ul>
+                        <li><a href="mailto:55mehmetokur@gmail.com">55mehmetokur@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© <span data-year>2026</span> Meok Apps</span>
+                <span lang="en">Made in Flutter · Android</span>
+                <span lang="tr">Flutter ile yapıldı · Android</span>
+            </div>
         </div>
     </footer>
 
     <script>
-        (function () {
-            var meta = {
-                en: {
-                    title: 'HexaWord — Hexagonal word puzzle | Meok Apps',
-                    desc: 'Connect letters on a hexagonal honeycomb to find hidden words. 2000 hand-written levels in four languages, Daily Puzzle, bonus words and offline play.',
-                    comb: 'HexaWord honeycomb spelling PUZZLE'
-                },
-                tr: {
-                    title: 'HexaWord — Altıgen petekte kelime bulmaca | Meok Apps',
-                    desc: 'Altıgen petek üzerinde harfleri birleştirerek kelime bul. Dört dilde 2000 elle hazırlanmış bölüm, Günün Bulmacası, gizli kelimeler ve çevrimdışı oynanış.',
-                    comb: 'KELİME yazan altıgen petek'
-                }
-            };
-
-            var buttons = document.querySelectorAll('.lang-switch button');
-            var description = document.querySelector('meta[name="description"]');
-            var comb = document.querySelector('.comb');
-
-            function setLang(lang) {
-                if (!meta[lang]) lang = 'en';
-                document.documentElement.setAttribute('data-lang', lang);
-                document.documentElement.setAttribute('lang', lang);
-                document.title = meta[lang].title;
-                if (description) description.setAttribute('content', meta[lang].desc);
-                if (comb) comb.setAttribute('aria-label', meta[lang].comb);
-                for (var i = 0; i < buttons.length; i++) {
-                    buttons[i].setAttribute('aria-pressed', buttons[i].dataset.lang === lang ? 'true' : 'false');
-                }
-                try { localStorage.setItem('hexaword-lang', lang); } catch (e) { }
+        window.PAGE_META = {
+            en: {
+                title: 'Meok Apps — Pitch Tactics & HexaWord',
+                desc: 'Meok Apps makes offline Android games for people who would rather think than tap fast: Pitch Tactics, a turn-based football manager, and HexaWord, a hexagonal word puzzle.'
+            },
+            tr: {
+                title: 'Meok Apps — Pitch Tactics ve HexaWord',
+                desc: 'Meok Apps, hızlı refleks yerine düşünmeyi sevenler için çevrimdışı Android oyunları yapıyor: sıra tabanlı futbol menajerlik oyunu Pitch Tactics ve altıgen kelime bulmacası HexaWord.'
             }
+        };
+    </script>
+    <script src="/assets/site.js" defer></script>
 
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener('click', function () { setLang(this.dataset.lang); });
-            }
-
-            // Varsayılan İngilizce; daha önce TR seçtiyse o hatırlanıyor.
-            var saved = null;
-            try { saved = localStorage.getItem('hexaword-lang'); } catch (e) { }
-            if (saved === 'tr') setLang('tr');
-
-            document.getElementById('y').textContent = new Date().getFullYear();
-        })();
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Meok Apps",
+      "url": "https://simsek00.github.io/",
+      "email": "55mehmetokur@gmail.com",
+      "description": "Independent Android game studio making offline games.",
+      "makesOffer": [
+        { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "Pitch Tactics: Soccer Manager", "applicationCategory": "GameApplication", "operatingSystem": "Android", "url": "https://simsek00.github.io/pitch-tactics/" } },
+        { "@type": "Offer", "itemOffered": { "@type": "SoftwareApplication", "name": "HexaWord", "applicationCategory": "GameApplication", "operatingSystem": "Android", "url": "https://simsek00.github.io/hexaword/" } }
+      ]
+    }
     </script>
 
 </body>
