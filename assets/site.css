@@ -901,6 +901,192 @@ section {
     font-size: .88rem;
 }
 
+/* --- legal pages --------------------------------------------------------
+   The privacy policies. Long, plain, and read rather than skimmed, so the
+   measure stays narrow and the headings stay quiet. */
+
+.legal-page {
+    padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(3.5rem, 8vw, 5.5rem);
+}
+
+.legal {
+    max-width: 44rem;
+    margin-inline: auto;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    margin-bottom: 1.6rem;
+    color: var(--ink-3);
+    font-size: .92rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: var(--ink);
+}
+
+.legal h1 {
+    font-size: clamp(1.8rem, 4.4vw, 2.5rem);
+    margin: 0 0 1.3rem;
+}
+
+.legal-meta {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 2.2rem;
+    font-size: .93rem;
+    line-height: 1.75;
+    color: var(--ink-2);
+}
+
+.legal-meta p {
+    margin: 0;
+}
+
+.legal-meta p+p {
+    margin-top: .5rem;
+}
+
+.legal-meta strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.legal-intro {
+    margin-bottom: 2.4rem;
+    font-size: 1.05rem;
+}
+
+.legal-intro p {
+    margin: 0 0 1rem;
+    color: var(--ink-2);
+}
+
+.legal-intro p:last-child {
+    margin-bottom: 0;
+}
+
+.toc {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 1.3rem 1.5rem 1.4rem;
+    margin-bottom: 2.6rem;
+}
+
+.toc h2 {
+    margin: 0 0 .8rem;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
+
+.toc ol {
+    columns: 2;
+    column-gap: 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: .93rem;
+}
+
+.toc li {
+    break-inside: avoid;
+    margin-bottom: .35rem;
+}
+
+.toc a {
+    color: var(--ink-2);
+    text-decoration: none;
+}
+
+.toc a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+@media (max-width: 34rem) {
+    .toc ol {
+        columns: 1;
+    }
+}
+
+.legal h2 {
+    font-size: 1.12rem;
+    margin: 2.6rem 0 .75rem;
+    scroll-margin-top: 6rem;
+}
+
+.legal h2:first-of-type {
+    margin-top: 0;
+}
+
+.legal p {
+    margin: 0 0 1.05rem;
+    color: var(--ink-2);
+}
+
+/* The policies quote Android permission constants and package names —
+   `com.google.android.gms.permission.AD_ID` is wider than a 320px screen and
+   has nowhere to break on its own. Only over-long words are affected; ordinary
+   prose wraps as before. */
+.legal p,
+.legal li,
+.legal code {
+    overflow-wrap: anywhere;
+}
+
+.legal ul {
+    margin: 0 0 1.15rem;
+    padding-inline-start: 1.2rem;
+    color: var(--ink-2);
+}
+
+.legal li {
+    margin-bottom: .45rem;
+}
+
+.legal li::marker {
+    color: var(--ink-3);
+}
+
+.legal strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.legal code {
+    padding: .1em .4em;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface-2);
+    font-size: .88em;
+}
+
+.legal .to-top {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: .92rem;
+}
+
+.legal .to-top a {
+    color: var(--ink-3);
+    text-decoration: none;
+}
+
+.legal .to-top a:hover {
+    color: var(--ink);
+}
+
 /* --- scroll reveal ------------------------------------------------------ */
 
 .reveal {
