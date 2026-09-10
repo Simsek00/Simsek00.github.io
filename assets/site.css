@@ -40,8 +40,12 @@
     --accent-soft: rgba(138, 100, 32, .1);
     --hero-glow: rgba(217, 172, 99, .3);
 
-    --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
-    --font-body: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    /* No webfont is loaded: the privacy policy states that these pages fetch
+       no external resources, and a font from a CDN would hand the visitor's IP
+       to a third party on a page about not doing that. Headings are set apart
+       by weight, size and tracking instead of by family. */
+    --font-display: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* Dark palette. Declared twice on purpose: once for the system preference,
@@ -1042,6 +1046,97 @@ section {
 .legal li,
 .legal code {
     overflow-wrap: anywhere;
+}
+
+/* Cells get the gentler rule: `anywhere` also shrinks a column's min-content
+   width, which collapsed the table and broke ordinary words down the middle
+   ("Processin / g"). `break-word` only breaks a word that genuinely cannot
+   fit. */
+.legal th,
+.legal td {
+    overflow-wrap: break-word;
+}
+
+.legal h3 {
+    font-size: 1rem;
+    margin: 1.9rem 0 .6rem;
+    scroll-margin-top: 6rem;
+}
+
+.legal ol {
+    margin: 0 0 1.15rem;
+    padding-inline-start: 1.45rem;
+    color: var(--ink-2);
+}
+
+.legal ol li::marker {
+    color: var(--ink-3);
+}
+
+/* Section rules from the source. The one that ends the lede would dangle
+   above the contents box, so it is dropped. */
+.legal hr.legal-rule {
+    height: 1px;
+    margin: 2.6rem 0 0;
+    border: 0;
+    background: var(--line);
+}
+
+.legal-intro hr.legal-rule:last-child {
+    display: none;
+}
+
+.legal blockquote {
+    margin: 0 0 1.2rem;
+    padding: .9rem 1.15rem;
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    background: var(--surface-2);
+}
+
+.legal blockquote p {
+    margin: 0;
+    color: var(--ink-2);
+}
+
+/* Tables. The two-column fact tables shrink to fit; the wide ones with a
+   header row keep a readable minimum and scroll inside their own box rather
+   than pushing the page sideways. */
+.table-wrap {
+    overflow-x: auto;
+    margin: 0 0 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+}
+
+.legal table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .92rem;
+}
+
+.legal table:has(thead) {
+    min-width: 30rem;
+}
+
+.legal th,
+.legal td {
+    padding: .7rem .9rem;
+    text-align: start;
+    vertical-align: top;
+    border-block-end: 1px solid var(--line);
+    color: var(--ink-2);
+}
+
+.legal thead th {
+    background: var(--surface-2);
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.legal tbody tr:last-child td {
+    border-block-end: 0;
 }
 
 .legal ul {

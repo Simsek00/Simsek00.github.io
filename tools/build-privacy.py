@@ -49,9 +49,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CODE_TOKEN = "\x00CODE%d\x00"
 
+ITEM_UL = re.compile(r"^-\s+")
+ITEM_OL = re.compile(r"^(\d+)\.\s+")
+CELL_RULE = re.compile(r"^:?-{2,}:?$")
+
 
 def inline(text: str) -> str:
-    """Bold, inline code and links, with the code spans held out of the way."""
+    """Bold, emphasis, inline code and links, with code spans held out of the way."""
     codes: list[str] = []
 
     def stash(m: re.Match[str]) -> str:
@@ -78,11 +82,89 @@ def inline(text: str) -> str:
 def slug(heading: str, lang: str) -> str:
     """A stable anchor. Numbered sections keep their number, which is what the
     two language versions have in common."""
-    m = re.match(r"^(\d+)\.", heading.strip())
+    # `## 4. Title` and `### 4.1 Title` must not collapse onto the same anchor.
+    m = re.match(r"^(\d+)\.(\d+)\s", heading.strip())
+    if m:
+        return f"s{m.group(1)}-{m.group(2)}-{lang}"
+    m = re.match(r"^(\d+)\.\s", heading.strip())
     if m:
         return f"s{m.group(1)}-{lang}"
     base = re.sub(r"[^a-z0-9]+", "-", heading.lower()).strip("-")
     return f"{base[:40]}-{lang}"
+
+
+def group_items(lines: list[str], pattern: re.Pattern[str]) -> list[str]:
+    """Split list lines into items, folding wrapped continuation lines back in.
+
+    A list item in these policies routinely runs onto a second, indented line;
+    treating every line as its own item would silently double the list.
+    """
+    items: list[str] = []
+    for line in lines:
+        m = pattern.match(line.strip())
+        if m:
+            items.append(line.strip()[m.end():].strip())
+        elif items:
+            items[-1] += " " + line.strip()
+        else:
+            items.append(line.strip())
+    return items
+
+
+def render_table(lines: list[str]) -> str:
+    """A pipe table. The first row is a header unless every cell in it is empty,
+    which is how the two-column fact tables in these policies are written."""
+    rows: list[list[str]] = []
+    for line in lines:
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if cells and all(CELL_RULE.fullmatch(c) for c in cells):
+            continue  # the |---|---| alignment row
+        rows.append(cells)
+    if not rows:
+        return ""
+
+    head, body = rows[0], rows[1:]
+    out = ['<div class="table-wrap"><table>']
+    if any(c for c in head):
+        out.append("<thead><tr>" + "".join(f"<th>{inline(c)}</th>" for c in head) + "</tr></thead>")
+    out.append("<tbody>")
+    for row in body:
+        out.append("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in row) + "</tr>")
+    out.append("</tbody></table></div>")
+    return "".join(out)
+
+
+def render_block(lines: list[str]) -> str:
+    """Turn one run of consecutive non-blank lines into HTML.
+
+    The kind is decided by the first line: anything unrecognised falls through
+    to a paragraph rather than being guessed at.
+    """
+    first = lines[0].strip()
+
+    if first.startswith("|"):
+        return render_table(lines)
+
+    if first.startswith(">"):
+        text = " ".join(l.strip().lstrip(">").strip() for l in lines)
+        return f"<blockquote><p>{inline(text)}</p></blockquote>"
+
+    if ITEM_UL.match(first):
+        items = group_items(lines, ITEM_UL)
+        return "<ul>" + "".join(f"<li>{inline(t)}</li>" for t in items) + "</ul>"
+
+    if ITEM_OL.match(first):
+        start = int(ITEM_OL.match(first).group(1))
+        attr = f' start="{start}"' if start != 1 else ""
+        items = group_items(lines, ITEM_OL)
+        return f"<ol{attr}>" + "".join(f"<li>{inline(t)}</li>" for t in items) + "</ol>"
+
+    if len(lines) > 1 and all(l.strip().startswith("**") for l in lines):
+        # A run of `**Label:** value` lines is a metadata stack, not one
+        # paragraph — markdown would join them, which is not the intent.
+        return '<p class="rows">' + "<br>".join(inline(l.strip()) for l in lines) + "</p>"
+
+    return f"<p>{inline(' '.join(l.strip() for l in lines))}</p>"
 
 
 @dataclass
@@ -105,50 +187,59 @@ def parse(md: str, lang: str) -> Policy:
     block: list[str] = []
     mode = "meta"  # until the first `##`
 
-    def flush_block(into: list[str]) -> None:
-        """A blank line ends the block; decide what it was and emit it."""
+    def target() -> list[str]:
+        return buf if mode == "body" else (intro if intro else meta)
+
+    def flush_block() -> None:
         if not block:
             return
-        bold_run = all(line.startswith("**") for line in block)
+        into = target()
+        bold_run = len(block) > 1 and all(l.strip().startswith("**") for l in block)
         if into is meta and not bold_run:
             # Prose in the header region is a lede, not metadata.
             into = intro
-        if all(line.startswith("- ") for line in block):
-            items = "".join(f"<li>{inline(line[2:].strip())}</li>" for line in block)
-            into.append(f"<ul>{items}</ul>")
-        elif bold_run and len(block) > 1:
-            # A run of `**Label:** value` lines is a metadata stack, not one
-            # paragraph — markdown would join them, which is not the intent.
-            into.append("<p class='rows'>" + "<br>".join(inline(l) for l in block) + "</p>")
-        else:
-            into.append(f"<p>{inline(' '.join(block))}</p>")
+        into.append(render_block(block))
         block.clear()
 
     def flush_section() -> None:
-        flush_block(buf)
+        flush_block()
         if current_heading is not None:
             sections.append((slug(current_heading, lang), current_heading, "".join(buf)))
         buf.clear()
 
     for raw in lines:
         line = raw.rstrip()
+        stripped = line.strip()
 
         if line.startswith("# "):
             title = line[2:].strip()
             continue
+
+        if line.startswith("### "):
+            flush_block()
+            heading = line[4:].strip()
+            target().append(f'<h3 id="{slug(heading, lang)}">{inline(heading)}</h3>')
+            continue
+
         if line.startswith("## "):
             if mode == "meta":
-                flush_block(meta if not intro else intro)
+                flush_block()
                 mode = "body"
             else:
                 flush_section()
             current_heading = line[3:].strip()
             continue
-        if not line.strip() or line.strip() == "---":
-            flush_block(meta if mode == "meta" else buf)
+
+        if stripped == "---":
+            flush_block()
+            target().append('<hr class="legal-rule">')
             continue
 
-        block.append(line.strip())
+        if not stripped:
+            flush_block()
+            continue
+
+        block.append(line)
 
     flush_section()
     return Policy(title=title, meta=meta, intro=intro, sections=sections)
@@ -236,11 +327,6 @@ PAGE = """<!DOCTYPE html>
 
     <link rel="icon" href="{favicon}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="/assets/site.css">
 
     <script>
