@@ -368,6 +368,9 @@ PAGE = """<!DOCTYPE html>
                 </a>
                 <a href="/pitch-tactics/"{pt_current}>Pitch Tactics</a>
                 <a href="/hexaword/"{hw_current}>HexaWord</a>
+                <a href="/about/">
+                    <span lang="en">About</span><span lang="tr">Hakkımda</span>
+                </a>
             </nav>
 
             <div class="controls">

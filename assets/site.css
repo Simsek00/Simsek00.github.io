@@ -1234,10 +1234,30 @@ section {
         margin-inline-start: auto;
     }
 
+    /* Four links plus the longer Turkish labels no longer fit a 320px row, so
+       the nav scrolls inside itself rather than pushing the page sideways.
+       Nothing is hidden: every link stays reachable by swiping the row. */
     .nav {
         order: 3;
         flex-basis: 100%;
-        margin-inline-start: -.5rem;
+        margin-inline: -.5rem;
+        padding-inline: .5rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        overscroll-behavior-inline: contain;
+        /* Softens the trailing edge so a cut-off link reads as "there is more
+           to swipe" rather than as a broken layout. */
+        mask-image: linear-gradient(to right, #000 calc(100% - 1.25rem), transparent);
+    }
+
+    .nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav a {
+        flex: none;
+        white-space: nowrap;
     }
 }
 
