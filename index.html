@@ -216,6 +216,34 @@
         .about-note p:last-child {
             margin-bottom: 0;
         }
+
+        .person .person-head {
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .person .monogram {
+            flex: none;
+            width: 3.4rem;
+            height: 3.8rem;
+        }
+
+        .person .person-head h3 {
+            margin: 0 0 .15rem;
+            font-size: 1.25rem;
+        }
+
+        .person .person-head p {
+            margin: 0;
+            font-size: .93rem;
+            color: var(--ink-3);
+        }
+
+        .person .btn-row {
+            margin-top: 1.6rem;
+        }
     </style>
 </head>
 
@@ -244,6 +272,9 @@
                 </a>
                 <a href="/pitch-tactics/">Pitch Tactics</a>
                 <a href="/hexaword/">HexaWord</a>
+                <a href="/about/">
+                    <span lang="en">About</span><span lang="tr">Hakkımda</span>
+                </a>
             </nav>
 
             <div class="controls">
@@ -646,39 +677,68 @@
                 <div class="section-head">
                     <p class="eyebrow">
                         <span lang="en">About</span>
-                        <span lang="tr">Hakkında</span>
+                        <span lang="tr">Hakkımda</span>
                     </p>
                     <h2>
-                        <span lang="en">One developer, two games</span>
-                        <span lang="tr">Bir geliştirici, iki oyun</span>
+                        <span lang="en">The person behind both</span>
+                        <span lang="tr">İkisinin de arkasındaki kişi</span>
                     </h2>
                 </div>
 
-                <div class="about-note reveal">
+                <div class="about-note person reveal">
+                    <div class="person-head">
+                        <svg class="monogram" viewBox="0 0 56 62" role="img" aria-label="MO">
+                            <path d="M28 2 L52 15.5 V46.5 L28 60 L4 46.5 V15.5 Z" fill="var(--accent-soft)"
+                                stroke="var(--accent)" stroke-width="2" />
+                            <text x="28" y="32" text-anchor="middle" dominant-baseline="central"
+                                font-family="system-ui, sans-serif" font-size="18" font-weight="700"
+                                fill="var(--accent)" letter-spacing="1">MO</text>
+                        </svg>
+                        <div>
+                            <h3>Mehmet Okur</h3>
+                            <p lang="en">Computer Engineer · Mobile App &amp; Game Developer · Ankara</p>
+                            <p lang="tr">Bilgisayar Mühendisi · Mobil Uygulama &amp; Oyun Geliştirici · Ankara</p>
+                        </div>
+                    </div>
+
                     <p lang="en">
-                        Meok Apps is one person writing both games in Flutter and shipping them
-                        on Android. That is small enough that every level in HexaWord was
-                        written by hand, and every number in the Pitch Tactics match engine was
-                        tuned against the rest of it until a season felt right.
+                        Meok Apps is one person. I write both games in Flutter and ship them on
+                        Android, which is small enough that every level in HexaWord was written
+                        by hand and every number in the Pitch Tactics match engine was tuned
+                        against the rest of it until a season felt right.
                     </p>
                     <p lang="tr">
-                        Meok Apps, iki oyunu da Flutter ile yazıp Android'de yayımlayan tek bir
-                        kişi. Bu kadar küçük olmasının bir sonucu var: HexaWord'deki her bölüm
-                        elle yazıldı, Pitch Tactics'in maç motorundaki her sayı da bir sezon
-                        doğru hissettirene kadar diğerlerine göre ayarlandı.
+                        Meok Apps tek kişi. İki oyunu da Flutter ile yazıp Android'de yayımlıyorum;
+                        bu kadar küçük olmasının bir sonucu var: HexaWord'deki her bölüm elle
+                        yazıldı, Pitch Tactics'in maç motorundaki her sayı da bir sezon doğru
+                        hissettirene kadar diğerlerine göre ayarlandı.
                     </p>
                     <p lang="en">
-                        Every club, competition and player in Pitch Tactics is fictional — no
-                        real crests, no licensed names. Found a bug, or want a language added?
-                        <a href="mailto:55mehmetokur@gmail.com">Write to me</a>; it is the same
+                        Before the games came a computer engineering degree at Gazi University,
+                        an internship on a defence-industry project management system and another
+                        in network security. Found a bug, or want a language added?
+                        <a href="mailto:55mehmetokur@gmail.com">Write to me</a> — it is the same
                         inbox that answers store reviews.
                     </p>
                     <p lang="tr">
-                        Pitch Tactics'teki her kulüp, turnuva ve oyuncu kurgusal — gerçek arma
-                        yok, lisanslı isim yok. Bir hata bulduysan ya da bir dil eklenmesini
-                        istiyorsan <a href="mailto:55mehmetokur@gmail.com">bana yaz</a>; mağaza
-                        yorumlarına da aynı kutudan cevap veriyorum.
+                        Oyunlardan önce Gazi Üniversitesi Bilgisayar Mühendisliği, savunma
+                        sanayine yönelik bir proje yönetim sisteminde ve ağ güvenliğinde iki staj
+                        var. Bir hata bulduysan ya da bir dil eklenmesini istiyorsan
+                        <a href="mailto:55mehmetokur@gmail.com">bana yaz</a> — mağaza yorumlarına
+                        da aynı kutudan cevap veriyorum.
                     </p>
+
+                    <div class="btn-row">
+                        <a class="btn btn-primary" href="/about/">
+                            <span lang="en">More about me</span>
+                            <span lang="tr">Hakkımda daha fazlası</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+                                aria-hidden="true">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
