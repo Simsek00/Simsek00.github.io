@@ -4,18 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mehmet Okur — Computer Engineer &amp; Game Developer | Meok Apps</title>
+    <title>Mehmet Okur — Computer Engineer, Full-Stack &amp; Mobile Developer | Meok Apps</title>
     <meta name="description"
-        content="Mehmet Okur, computer engineering graduate of Gazi University in Ankara. Flutter mobile apps and games, one shipped on Google Play, plus internships in test automation and network security.">
+        content="Mehmet Okur, computer engineering graduate of Gazi University in Ankara. Full-stack and mobile developer: React, NestJS and PostgreSQL at HAVELSAN, two Flutter games live on Google Play.">
     <meta name="theme-color" content="#F6F6F3" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0C0E10" media="(prefers-color-scheme: dark)">
     <link rel="canonical" href="https://simsek00.github.io/about/">
 
     <meta property="og:type" content="profile">
     <meta property="og:site_name" content="Meok Apps">
-    <meta property="og:title" content="Mehmet Okur — Computer Engineer &amp; Game Developer">
+    <meta property="og:title" content="Mehmet Okur — Computer Engineer, Full-Stack &amp; Mobile Developer">
     <meta property="og:description"
-        content="Flutter mobile apps and games, one shipped on Google Play. Computer engineering, Gazi University, Ankara.">
+        content="Full-stack and mobile developer. Two Flutter games live on Google Play. Computer engineering, Gazi University, Ankara.">
     <meta property="og:url" content="https://simsek00.github.io/about/">
     <meta name="twitter:card" content="summary">
 
@@ -200,6 +200,60 @@
             font-size: .97rem;
         }
 
+        .timeline .summary {
+            margin: 0 0 .7rem;
+        }
+
+        .timeline ul.points {
+            margin: 0;
+            padding-inline-start: 1.15rem;
+            display: grid;
+            gap: .4rem;
+            color: var(--ink-2);
+            font-size: .96rem;
+        }
+
+        .timeline ul.points li::marker {
+            color: var(--accent);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+            margin: .8rem 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .tags li {
+            padding: .22rem .62rem;
+            border: 1px solid var(--line);
+            border-radius: var(--r-pill);
+            background: var(--surface-2);
+            font-size: .8rem;
+            color: var(--ink-2);
+        }
+
+        .projects ul.points {
+            margin: 0 0 1rem;
+            padding-inline-start: 1.1rem;
+            display: grid;
+            gap: .45rem;
+            color: var(--ink-2);
+            font-size: .94rem;
+        }
+
+        .projects ul.points li::marker {
+            color: var(--accent);
+        }
+
+        .projects .sub {
+            margin: -.2rem 0 .7rem;
+            font-size: .88rem;
+            color: var(--ink-3);
+        }
+
         .gpa {
             display: inline-flex;
             align-items: baseline;
@@ -351,60 +405,6 @@
         .status.done .dot {
             background: var(--ink-3);
         }
-
-        /* ---- two-up closing blocks ---- */
-
-        .two-up {
-            display: grid;
-            gap: 1.1rem;
-            /* Each panel hugs its own content: the languages list is one line
-               and stretching it to match the interests list left a hole. */
-            align-items: start;
-            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-        }
-
-        .panel {
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--r-md);
-            padding: 1.5rem;
-        }
-
-        .panel h3 {
-            font-size: .8rem;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            color: var(--ink-3);
-            margin: 0 0 .9rem;
-            font-weight: 600;
-        }
-
-        .panel ul {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            display: grid;
-            gap: .55rem;
-            color: var(--ink-2);
-            font-size: .96rem;
-        }
-
-        .panel li {
-            display: flex;
-            gap: .6rem;
-            align-items: baseline;
-        }
-
-        .panel li::before {
-            content: "";
-            flex: none;
-            width: .4rem;
-            height: .45rem;
-            margin-top: .35rem;
-            background: var(--accent);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-        }
-
     </style>
 </head>
 
@@ -485,8 +485,8 @@
                     </svg>
                     <div>
                         <h1>Mehmet Okur</h1>
-                        <p class="me-role" lang="en">Computer Engineer · Mobile App &amp; Game Developer</p>
-                        <p class="me-role" lang="tr">Bilgisayar Mühendisi · Mobil Uygulama &amp; Oyun Geliştirici</p>
+                        <p class="me-role" lang="en">Computer Engineer · Full-Stack &amp; Mobile Developer</p>
+                        <p class="me-role" lang="tr">Bilgisayar Mühendisi · Full-Stack &amp; Mobil Geliştirici</p>
                         <ul class="me-where">
                             <li>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -511,21 +511,18 @@
                 </div>
 
                 <p class="me-lede" lang="en">
-                    I graduated in computer engineering from Gazi University (30% English) and
-                    build mobile apps and games end to end in Flutter; one of my games is live
-                    on Google Play. I interned on a project-management system built for the
-                    defence industry and, before that, in network security. Right now I am
-                    working on a multiplayer PC game and a mobile management game — secure
-                    coding, network architecture and game design are where my interest sits.
+                    I graduated in computer engineering from Gazi University (GPA 3.46). At
+                    HAVELSAN I worked on the database, security and interface of an enterprise
+                    project management platform built with React, NestJS, PostgreSQL and
+                    Prisma. Two mobile games I built end to end are live on Google Play, and I
+                    am currently building a multiplayer PC game with Unity Netcode.
                 </p>
                 <p class="me-lede" lang="tr">
-                    Gazi Üniversitesi Bilgisayar Mühendisliği (%30 İngilizce) mezunuyum. Flutter
-                    ile uçtan uca mobil uygulama ve oyun geliştiriyorum; kendi geliştirdiğim bir
-                    mobil oyun Google Play'de yayında. Savunma sanayine yönelik bir proje yönetim
-                    sisteminin geliştirilmesinde ve ağ güvenliği alanında staj deneyimi edindim.
-                    Hâlihazırda çok oyunculu bir PC oyunu ile mobil bir menajerlik oyunu üzerinde
-                    çalışıyorum; güvenli kodlama, ağ mimarileri ve oyun tasarımı ilgi alanlarımın
-                    merkezinde.
+                    Gazi Üniversitesi Bilgisayar Mühendisliği mezunuyum (GPA 3.46). HAVELSAN'da
+                    React, NestJS, PostgreSQL ve Prisma ile kurumsal bir proje yönetim
+                    platformunda veritabanı, güvenlik ve arayüz geliştirmeleri yaptım. Uçtan uca
+                    geliştirdiğim iki mobil oyun Google Play'de yayında. Şu an Unity Netcode ile
+                    çok oyunculu bir PC oyunu geliştiriyorum.
                 </p>
 
                 <div class="btn-row" style="margin-top:2rem">
@@ -545,7 +542,7 @@
                         </svg>
                         LinkedIn
                     </a>
-                    <a class="btn btn-ghost" href="https://play.google.com/store/apps/dev?id=Meok+Apps"
+                    <a class="btn btn-ghost" href="https://play.google.com/store/apps/developer?id=Meok+Apps"
                         rel="noopener">
                         <svg width="15" height="17" viewBox="0 0 20 22" aria-hidden="true">
                             <path d="M1.4.7 12 11 1.4 21.3A2 2 0 0 1 1 20V2A2 2 0 0 1 1.4.7Z" fill="currentColor"
@@ -570,14 +567,14 @@
                         <span lang="tr">Gazi Üniversitesi mezuniyeti</span>
                     </li>
                     <li>
-                        <b>1</b>
-                        <span lang="en">game live on Google Play</span>
+                        <b>2</b>
+                        <span lang="en">games live on Google Play</span>
                         <span lang="tr">oyun Google Play'de yayında</span>
                     </li>
                     <li>
-                        <b>2</b>
-                        <span lang="en">games in development</span>
-                        <span lang="tr">oyun geliştirme aşamasında</span>
+                        <b>4.9</b>
+                        <span lang="en">HexaWord rating on Google Play</span>
+                        <span lang="tr">HexaWord'ün Google Play puanı</span>
                     </li>
                 </ul>
             </div>
@@ -603,14 +600,45 @@
                     <li>
                         <span class="when" lang="en">July – August 2026</span>
                         <span class="when" lang="tr">Temmuz – Ağustos 2026</span>
-                        <h3 lang="en">Intern — Test Automation Software</h3>
-                        <h3 lang="tr">Stajyer — Test Otomasyon Yazılımları</h3>
+                        <h3 lang="en">Software Development Intern, Test Directorate</h3>
+                        <h3 lang="tr">Yazılım Geliştirme Stajyeri, Test Direktörlüğü</h3>
                         <p class="org"><b>HAVELSAN</b><span class="dot">Ankara</span></p>
-                        <p lang="en">Worked on a Jira-like project management system tailored for
-                            the defence industry; the product was built in TypeScript.</p>
-                        <p lang="tr">Savunma sanayine özelleştirilmiş, Jira benzeri bir proje yönetim
-                            sisteminin geliştirilmesinde görev aldım; ürün TypeScript ile
-                            geliştiriliyordu.</p>
+                        <p class="summary" lang="en">Worked in a team of eight on LURA, a platform
+                            planned to replace Jira that brings requirement, task, test and defect
+                            management together in one place.</p>
+                        <p class="summary" lang="tr">Jira'nın yerini alması planlanan, gereksinim,
+                            görev, test ve hata yönetimini tek platformda birleştiren LURA projesinde
+                            8 kişilik ekiple çalıştım.</p>
+                        <ul class="points" lang="en">
+                            <li>Kept data consistent with transaction management, PostgreSQL
+                                sequences and composite indexes, and sped up slow queries.</li>
+                            <li>Built a tamper-proof audit log infrastructure and added server-side
+                                role-based access control (RBAC) to critical operations.</li>
+                            <li>Developed the API and the interface of a traceability map that shows
+                                how requirements, tasks, tests and defects connect, as a graph.</li>
+                            <li>Redesigned the filtering interface around a visual query builder with
+                                AND/OR support; added many-to-many requirement linking and automatic
+                                defect linking to test runs.</li>
+                        </ul>
+                        <ul class="points" lang="tr">
+                            <li>Transaction yönetimi, PostgreSQL sequence yapısı ve bileşik indekslerle
+                                veri tutarlılığını sağladım, yavaş sorguları hızlandırdım.</li>
+                            <li>Silinemez denetim kaydı (audit log) altyapısı kurdum ve kritik
+                                işlemlere sunucu tarafında rol bazlı yetkilendirme (RBAC) ekledim.</li>
+                            <li>Gereksinim, görev, test ve hata ilişkilerini graf olarak gösteren
+                                izlenebilirlik haritasının API'sini ve arayüzünü geliştirdim.</li>
+                            <li>AND/OR destekli görsel sorgu oluşturucuyla filtreleme arayüzünü yeniden
+                                tasarladım; test süreçlerinde çoka-çok gereksinim bağlama ve otomatik
+                                hata bağlantısı ekledim.</li>
+                        </ul>
+                        <ul class="tags" aria-label="Technologies">
+                            <li>React</li>
+                            <li>TypeScript</li>
+                            <li>NestJS</li>
+                            <li>PostgreSQL</li>
+                            <li>Prisma</li>
+                            <li>Docker</li>
+                        </ul>
                     </li>
                     <li>
                         <span class="when" lang="en">Summer 2025 · 1 month</span>
@@ -618,10 +646,16 @@
                         <h3 lang="en">Network Security Intern</h3>
                         <h3 lang="tr">Ağ Güvenliği Stajyeri</h3>
                         <p class="org"><b>Beyaz.net Danışmanlık Hizmetleri</b><span class="dot">Ankara</span></p>
-                        <p lang="en">Hands-on experience with the fundamentals and working concepts
-                            of network security.</p>
-                        <p lang="tr">Ağ güvenliğinin temel işleyişi ve kavramları üzerine uygulamalı
-                            deneyim edindim.</p>
+                        <ul class="points" lang="en">
+                            <li>Hands-on work with the OSI and TCP/IP layers, IP addressing, ports
+                                and protocols.</li>
+                            <li>Configured LANs and VLANs and designed network topologies.</li>
+                        </ul>
+                        <ul class="points" lang="tr">
+                            <li>OSI/TCP-IP katmanları, IP adresleme, port ve protokoller üzerine
+                                uygulamalı çalıştım.</li>
+                            <li>LAN/VLAN yapılandırması ve ağ topolojisi tasarımı yaptım.</li>
+                        </ul>
                     </li>
                 </ul>
 
@@ -650,78 +684,6 @@
 
         <hr class="rule">
 
-        <!-- ============================ skills ============================ -->
-        <section id="skills">
-            <div class="wrap">
-                <div class="section-head">
-                    <p class="eyebrow">
-                        <span lang="en">Skills</span>
-                        <span lang="tr">Yetenekler</span>
-                    </p>
-                    <h2>
-                        <span lang="en">What I work with</span>
-                        <span lang="tr">Kullandıklarım</span>
-                    </h2>
-                </div>
-
-                <ul class="skills reveal">
-                    <li>
-                        <h3 lang="en">Mobile development</h3>
-                        <h3 lang="tr">Mobil geliştirme</h3>
-                        <ul>
-                            <li>Flutter</li>
-                            <li>Dart</li>
-                            <li>Firebase</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <h3 lang="en">Back end &amp; databases</h3>
-                        <h3 lang="tr">Arka uç &amp; veritabanı</h3>
-                        <ul>
-                            <li>Node.js</li>
-                            <li>TypeScript</li>
-                            <li>MongoDB</li>
-                            <li lang="en">Relational database design (SQL)</li>
-                            <li lang="tr">İlişkisel veritabanı tasarımı (SQL)</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <h3 lang="en">Game development</h3>
-                        <h3 lang="tr">Oyun geliştirme</h3>
-                        <ul>
-                            <li>Unity</li>
-                            <li lang="en">Mechanics &amp; rule design</li>
-                            <li lang="tr">Mekanik &amp; kural tasarımı</li>
-                            <li lang="en">Game theory</li>
-                            <li lang="tr">Oyun teorisi</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <h3 lang="en">Security &amp; networking</h3>
-                        <h3 lang="tr">Güvenlik &amp; ağ</h3>
-                        <ul>
-                            <li lang="en">Network security fundamentals</li>
-                            <li lang="tr">Ağ güvenliği temelleri</li>
-                            <li lang="en">Secure coding</li>
-                            <li lang="tr">Güvenli kodlama</li>
-                            <li lang="en">Network protocols</li>
-                            <li lang="tr">Ağ protokolleri</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <h3 lang="en">Tools</h3>
-                        <h3 lang="tr">Araçlar</h3>
-                        <ul>
-                            <li>Git / GitHub</li>
-                            <li>Google Play Console</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <hr class="rule">
-
         <!-- =========================== projects =========================== -->
         <section id="projects">
             <div class="wrap">
@@ -742,24 +704,57 @@
                             <span lang="en">Live on Google Play</span>
                             <span lang="tr">Google Play'de yayında</span>
                         </span>
-                        <h3 lang="en">HexaWord: Word Puzzle — mobile game</h3>
-                        <h3 lang="tr">HexaWord: Word Puzzle — Mobil Oyun</h3>
-                        <p lang="en">A word game built and published end to end by me, where you
-                            join letters on a hexagonal honeycomb grid. Multilingual, with a
-                            separate level set and progress per language, three difficulty tiers of
-                            7 / 19 / 37 cells, level generation that only ever produces a solvable
-                            board, a hint economy and offline play.</p>
-                        <p lang="tr">Altıgen petek ızgara üzerinde harfleri birleştirerek kelime
-                            bulunan, uçtan uca tarafımdan geliştirilip Google Play'de yayımlanan
-                            kelime oyunu. Çok dilli destek (her dil için ayrı seviye seti ve ilerleme
-                            takibi), 7 / 19 / 37 hücrelik üç zorluk kademesi, her zaman çözülebilir
-                            tahta üreten seviye üretim mantığı, ipucu ekonomisi ve çevrimdışı
-                            oynanabilirlik içerir.</p>
+                        <h3>Pitch Tactics: Soccer Manager</h3>
+                        <p class="sub" lang="en">Mobile football management game</p>
+                        <p class="sub" lang="tr">Mobil futbol menajerlik oyunu</p>
+                        <ul class="points" lang="en">
+                            <li>Designed and published on my own: squad building, a transfer market,
+                                tactics and formations, live match simulation and a multi-season
+                                career mode.</li>
+                            <li>Fully offline with autosave; regular updates have added penalty and
+                                free-kick mini-games and 200+ derby matchups.</li>
+                        </ul>
+                        <ul class="points" lang="tr">
+                            <li>Kadro kurma, transfer pazarı, taktik/diziliş seçimi, canlı maç
+                                simülasyonu ve çok sezonluk kariyer modu içeren menajerlik oyununu tek
+                                başıma tasarlayıp yayımladım.</li>
+                            <li>Tamamen çevrimdışı çalışan, otomatik kayıtlı oyun yapısı; düzenli
+                                güncellemelerle penaltı/serbest vuruş mini oyunları ve 200+ derbi
+                                eşleşmesi ekledim.</li>
+                        </ul>
+                        <p class="tech">
+                            Flutter · <a href="/pitch-tactics/">
+                                <span lang="en">Game page</span><span lang="tr">Oyun sayfası</span></a>
+                            · <a href="https://play.google.com/store/apps/details?id=com.pitchtactics.mehmetokur" rel="noopener">Google Play</a>
+                        </p>
+                    </li>
+
+                    <li>
+                        <span class="status live"><span class="dot"></span>
+                            <span lang="en">Live on Google Play · 4.9 ★</span>
+                            <span lang="tr">Google Play'de yayında · 4.9 ★</span>
+                        </span>
+                        <h3>HexaWord: Word Puzzle</h3>
+                        <p class="sub" lang="en">Mobile word game</p>
+                        <p class="sub" lang="tr">Mobil kelime oyunu</p>
+                        <ul class="points" lang="en">
+                            <li>Developed the level-generation algorithm that only ever produces a
+                                solvable board on a hexagonal grid; three difficulty tiers of 7 / 19 /
+                                37 cells.</li>
+                            <li>Multilingual, with a separate level set and progress tracking per
+                                language, a hint economy and offline play.</li>
+                        </ul>
+                        <ul class="points" lang="tr">
+                            <li>Altıgen ızgarada her zaman çözülebilir tahta üreten seviye üretim
+                                algoritmasını geliştirdim; 7 / 19 / 37 hücrelik üç zorluk
+                                kademesi.</li>
+                            <li>Her dil için ayrı seviye seti ve ilerleme takibiyle çok dilli destek,
+                                ipucu ekonomisi ve çevrimdışı oynanış.</li>
+                        </ul>
                         <p class="tech">
                             Flutter · <a href="/hexaword/">
                                 <span lang="en">Game page</span><span lang="tr">Oyun sayfası</span></a>
-                            · <a href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com"
-                                rel="noopener">Google Play</a>
+                            · <a href="https://play.google.com/store/apps/details?id=hexaword.mehmetokur.com" rel="noopener">Google Play</a>
                         </p>
                     </li>
 
@@ -768,79 +763,96 @@
                             <span lang="en">In development</span>
                             <span lang="tr">Aktif geliştirme</span>
                         </span>
-                        <h3 lang="en">Mobile football management game</h3>
-                        <h3 lang="tr">Mobil Futbol Menajerlik Oyunu</h3>
-                        <p lang="en">A mobile management game built around squad management, match
-                            simulation and season progression. The balance, the rule set and the
-                            progression mechanics are my own design.</p>
-                        <p lang="tr">Kadro yönetimi, maç simülasyonu ve sezon ilerleyişi üzerine
-                            kurulu mobil menajerlik oyunu. Oyun dengesi, kural seti ve ilerleme
-                            mekanikleri tarafımdan tasarlanıyor.</p>
-                        <p class="tech">
-                            Flutter · <a href="/pitch-tactics/">Pitch Tactics</a>
-                        </p>
-                    </li>
-
-                    <li>
-                        <span class="status wip"><span class="dot"></span>
-                            <span lang="en">In development</span>
-                            <span lang="tr">Aktif geliştirme</span>
-                        </span>
-                        <h3 lang="en">Co-op PC game</h3>
-                        <h3 lang="tr">Co-op Bilgisayar Oyunu</h3>
-                        <p lang="en">A multiplayer co-op PC game. The game loop and the mechanic
-                            design are being worked out as development continues.</p>
-                        <p lang="tr">Çok oyunculu (co-op) PC oyunu. Oyun döngüsü ve mekanik tasarımı
-                            kurgulanarak geliştirme süreci sürdürülüyor.</p>
-                        <p class="tech">Unity</p>
+                        <h3>OutBid <span lang="en">(Shadow Market)</span><span lang="tr">(Gölge Pazarı)</span></h3>
+                        <p class="sub" lang="en">Multiplayer PC party game</p>
+                        <p class="sub" lang="tr">Çok oyunculu PC parti oyunu</p>
+                        <ul class="points" lang="en">
+                            <li>An auction game for 4–12 players grounded in game theory: Host/Client
+                                architecture on Unity Netcode for GameObjects, with server-authoritative
+                                bidding.</li>
+                            <li>We built the Vickrey, Dutch and Texas auction modes and a mutator
+                                system to be extended through the Strategy pattern; the item database
+                                is ScriptableObject-based.</li>
+                        </ul>
+                        <ul class="points" lang="tr">
+                            <li>4–12 oyunculu, oyun teorisine dayalı müzayede oyunu; Unity Netcode for
+                                GameObjects ile Host/Client yapısı ve sunucu otoriteli teklif
+                                mantığı.</li>
+                            <li>Vickrey, Hollanda ve Texas açık artırma modlarını ve mutatör sistemini
+                                Strategy deseniyle genişletilebilir şekilde kurguladık; eşya veritabanı
+                                ScriptableObject tabanlı.</li>
+                        </ul>
+                        <p class="tech">Unity · C#</p>
                     </li>
 
                     <li>
                         <span class="status done"><span class="dot"></span>
-                            <span lang="en">Team project</span>
-                            <span lang="tr">Ekip projesi</span>
+                            <span lang="en">Team of two</span>
+                            <span lang="tr">2 kişilik ekip</span>
                         </span>
                         <h3>Toplanalım</h3>
-                        <p lang="en">A social platform where university students, once identity
-                            verified, can create and join events either for their own university or
-                            across all of them. The student verification flow was automated. Built
-                            by a team of two.</p>
-                        <p lang="tr">Üniversite öğrencilerinin kimlik doğrulamasından geçerek yalnızca
-                            kendi üniversiteleri ya da tüm üniversiteler için etkinlik oluşturabildiği
-                            ve etkinliklere katılabildiği sosyal platform. Öğrenci doğrulama akışı
-                            otomatikleştirildi; 2 kişilik ekiple geliştirildi.</p>
+                        <p class="sub" lang="en">University event platform</p>
+                        <p class="sub" lang="tr">Üniversite etkinlik platformu</p>
+                        <ul class="points" lang="en">
+                            <li>Built end to end with my teammate: a social app where students create
+                                and join events open to their own university or to all of them.</li>
+                            <li>Automated student verification by reading documents with OpenCV and
+                                ML Kit.</li>
+                        </ul>
+                        <ul class="points" lang="tr">
+                            <li>Öğrencilerin kendi üniversitelerine ya da tüm üniversitelere açık
+                                etkinlik oluşturup katılabildiği sosyal uygulamayı ekip arkadaşımla
+                                birlikte uçtan uca geliştirdik.</li>
+                            <li>Öğrenci doğrulama akışını OpenCV ve ML Kit ile belge okuyarak
+                                otomatikleştirdik.</li>
+                        </ul>
                         <p class="tech">Flutter · Firebase · OpenCV · ML Kit</p>
                     </li>
 
                     <li>
                         <span class="status done"><span class="dot"></span>
-                            <span lang="en">Team project</span>
-                            <span lang="tr">Ekip projesi</span>
+                            <span lang="en">School project · team of four</span>
+                            <span lang="tr">Okul projesi · 4 kişilik ekip</span>
                         </span>
                         <h3>MessageSenderSecure</h3>
-                        <p lang="en">A secure messaging application that protects the privacy of both
-                            message content and user information. Built as a university project by a
-                            team of four, applying secure coding practices.</p>
-                        <p lang="tr">Mesaj içeriklerinin ve kullanıcı bilgilerinin gizliliğinin
-                            korunduğu güvenli haberleşme uygulaması. 4 kişilik ekiple okul projesi
-                            kapsamında geliştirildi; güvenli kodlama pratikleri uygulandı.</p>
+                        <p class="sub" lang="en">End-to-end encrypted messaging system</p>
+                        <p class="sub" lang="tr">Uçtan uca şifreli mesajlaşma sistemi</p>
+                        <ul class="points" lang="en">
+                            <li>I was responsible for encryption and secure storage: messages are
+                                encrypted with Fernet (AES-256) so they stay unreadable even in the
+                                database, and passwords are hashed with bcrypt.</li>
+                        </ul>
+                        <ul class="points" lang="tr">
+                            <li>Ekipte şifreleme ve güvenli depolamadan sorumluydum; mesajları Fernet
+                                (AES-256) ile şifreleyerek veritabanında bile okunamaz hale getirdim,
+                                parolalar bcrypt ile hashlendi.</li>
+                        </ul>
                         <p class="tech">
+                            Python · Flask · Firebase ·
                             <a href="https://github.com/Simsek00/messagesendersecure" rel="noopener">GitHub</a>
                         </p>
                     </li>
 
                     <li>
                         <span class="status done"><span class="dot"></span>
-                            <span lang="en">University project</span>
-                            <span lang="tr">Okul projesi</span>
+                            <span lang="en">Desktop app</span>
+                            <span lang="tr">Masaüstü uygulaması</span>
                         </span>
-                        <h3 lang="en">Library automation system</h3>
-                        <h3 lang="tr">Kütüphane Otomasyon Sistemi</h3>
-                        <p lang="en">Library management software designed around a relational
-                            database schema, tracking members, books and lending.</p>
-                        <p lang="tr">İlişkisel veritabanı şeması kurgulanarak tasarlanan kütüphane
-                            yönetim yazılımı; üye, kitap ve ödünç işlemlerinin takibi.</p>
-                        <p class="tech">SQL</p>
+                        <h3>Kutupoto</h3>
+                        <p class="sub" lang="en">Library automation system</p>
+                        <p class="sub" lang="tr">Kütüphane otomasyon sistemi</p>
+                        <ul class="points" lang="en">
+                            <li>Management software for members, books and loans, designed around a
+                                relational database schema.</li>
+                        </ul>
+                        <ul class="points" lang="tr">
+                            <li>Üye, kitap ve ödünç işlemlerini yöneten, ilişkisel veritabanı şemasıyla
+                                tasarlanmış yönetim yazılımı.</li>
+                        </ul>
+                        <p class="tech">
+                            C# · .NET · SQL ·
+                            <a href="https://github.com/Simsek00/Kutupoto" rel="noopener">GitHub</a>
+                        </p>
                     </li>
                 </ul>
             </div>
@@ -848,46 +860,75 @@
 
         <hr class="rule">
 
-        <!-- ======================== languages & more ====================== -->
-        <section id="more">
-            <div class="wrap narrow">
+        <!-- ============================ skills ============================ -->
+        <section id="skills">
+            <div class="wrap">
                 <div class="section-head">
                     <p class="eyebrow">
-                        <span lang="en">Also</span>
-                        <span lang="tr">Ayrıca</span>
+                        <span lang="en">Skills</span>
+                        <span lang="tr">Yetenekler</span>
                     </p>
                     <h2>
-                        <span lang="en">Languages and interests</span>
-                        <span lang="tr">Diller ve ilgi alanları</span>
+                        <span lang="en">What I work with</span>
+                        <span lang="tr">Kullandıklarım</span>
                     </h2>
                 </div>
 
-                <div class="two-up reveal">
-                    <div class="panel">
-                        <h3>
-                            <span lang="en">Languages</span><span lang="tr">Yabancı dil</span>
-                        </h3>
+                <ul class="skills reveal">
+                    <li>
+                        <h3 lang="en">Web &amp; back end</h3>
+                        <h3 lang="tr">Web &amp; arka uç</h3>
+                        <ul>
+                            <li>TypeScript</li>
+                            <li>React</li>
+                            <li>Node.js</li>
+                            <li>NestJS</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h3 lang="en">Databases</h3>
+                        <h3 lang="tr">Veritabanı</h3>
+                        <ul>
+                            <li>PostgreSQL</li>
+                            <li>Prisma</li>
+                            <li>MongoDB</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h3 lang="en">Mobile</h3>
+                        <h3 lang="tr">Mobil</h3>
+                        <ul>
+                            <li>Flutter</li>
+                            <li>Firebase</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h3 lang="en">Games</h3>
+                        <h3 lang="tr">Oyun</h3>
+                        <ul>
+                            <li>Unity</li>
+                            <li>C#</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h3 lang="en">Tools</h3>
+                        <h3 lang="tr">Araçlar</h3>
+                        <ul>
+                            <li>Git</li>
+                            <li>Docker</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h3 lang="en">Languages</h3>
+                        <h3 lang="tr">Yabancı dil</h3>
                         <ul>
                             <li lang="en">English — intermediate (B1)</li>
-                            <li lang="tr">İngilizce — Orta Seviye (B1)</li>
+                            <li lang="tr">İngilizce — orta (B1)</li>
                         </ul>
-                    </div>
-                    <div class="panel">
-                        <h3>
-                            <span lang="en">Interests</span><span lang="tr">İlgi alanları</span>
-                        </h3>
-                        <ul>
-                            <li lang="en">Cyber security and network architecture</li>
-                            <li lang="tr">Siber güvenlik ve ağ mimarileri</li>
-                            <li lang="en">Board game design</li>
-                            <li lang="tr">Kutu oyunu (board game) tasarımı</li>
-                            <li lang="en">System hardware and computer architecture</li>
-                            <li lang="tr">Sistem donanımları ve bilgisayar mimarisi</li>
-                        </ul>
-                    </div>
-                </div>
+                    </li>
+                </ul>
 
-                <div class="btn-row center" style="margin-top:2.5rem">
+                <div class="btn-row center" style="margin-top:3rem">
                     <a class="btn btn-primary" href="mailto:55mehmetokur@gmail.com">
                         <span lang="en">Write to me</span>
                         <span lang="tr">Bana yaz</span>
@@ -921,7 +962,7 @@
                     <ul>
                         <li><a href="https://github.com/Simsek00" rel="noopener">GitHub</a></li>
                         <li><a href="https://linkedin.com/in/mehmet-okur-b67067219" rel="noopener">LinkedIn</a></li>
-                        <li><a href="https://play.google.com/store/apps/dev?id=Meok+Apps" rel="noopener">
+                        <li><a href="https://play.google.com/store/apps/developer?id=Meok+Apps" rel="noopener">
                             <span lang="en">Google Play developer page</span>
                             <span lang="tr">Google Play geliştirici sayfası</span>
                         </a></li>
@@ -956,12 +997,12 @@
     <script>
         window.PAGE_META = {
             en: {
-                title: 'Mehmet Okur — Computer Engineer & Game Developer | Meok Apps',
-                desc: 'Mehmet Okur, computer engineering graduate of Gazi University in Ankara. Flutter mobile apps and games, one shipped on Google Play, plus internships in test automation and network security.'
+                title: 'Mehmet Okur — Computer Engineer, Full-Stack & Mobile Developer | Meok Apps',
+                desc: 'Mehmet Okur, computer engineering graduate of Gazi University in Ankara. Full-stack and mobile developer: React, NestJS and PostgreSQL at HAVELSAN, two Flutter games live on Google Play.'
             },
             tr: {
-                title: 'Mehmet Okur — Bilgisayar Mühendisi ve Oyun Geliştirici | Meok Apps',
-                desc: 'Mehmet Okur, Gazi Üniversitesi Bilgisayar Mühendisliği mezunu. Flutter ile mobil uygulama ve oyun geliştiriyor; bir oyunu Google Play\'de yayında. Test otomasyonu ve ağ güvenliği staj deneyimi.'
+                title: 'Mehmet Okur — Bilgisayar Mühendisi, Full-Stack ve Mobil Geliştirici | Meok Apps',
+                desc: 'Mehmet Okur, Gazi Üniversitesi Bilgisayar Mühendisliği mezunu. HAVELSAN\'da React, NestJS ve PostgreSQL; Flutter ile geliştirdiği iki oyun Google Play\'de yayında.'
             }
         };
     </script>
@@ -974,10 +1015,10 @@
       "name": "Mehmet Okur",
       "url": "https://simsek00.github.io/about/",
       "email": "55mehmetokur@gmail.com",
-      "jobTitle": "Computer Engineer, Mobile App & Game Developer",
+      "jobTitle": "Computer Engineer, Full-Stack & Mobile Developer",
       "address": { "@type": "PostalAddress", "addressLocality": "Ankara", "addressCountry": "TR" },
       "alumniOf": { "@type": "CollegeOrUniversity", "name": "Gazi Üniversitesi" },
-      "knowsAbout": ["Flutter", "Dart", "Unity", "TypeScript", "Node.js", "Network security", "Game design"],
+      "knowsAbout": ["TypeScript", "React", "Node.js", "NestJS", "PostgreSQL", "Prisma", "MongoDB", "Flutter", "Firebase", "Unity", "C#", "Docker"],
       "sameAs": [
         "https://github.com/Simsek00",
         "https://linkedin.com/in/mehmet-okur-b67067219"
