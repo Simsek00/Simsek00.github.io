@@ -155,12 +155,16 @@ body.t-hex {
    Both languages sit in the markup and CSS hides the one not chosen, so the
    page is readable with JavaScript switched off. */
 
+/* `!important` on purpose: the hidden language must lose to every layout rule.
+   Without it, any component that sets its own `display` with equal
+   specificity — `.timeline ul.points { display: grid }` did — wins on source
+   order and shows both languages at once. */
 html[data-lang="en"] [lang="tr"] {
-    display: none;
+    display: none !important;
 }
 
 html[data-lang="tr"] [lang="en"] {
-    display: none;
+    display: none !important;
 }
 
 /* --- base --------------------------------------------------------------- */

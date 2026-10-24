@@ -562,8 +562,8 @@ GAMES = {
             "%3Ccircle cx='16' cy='16' r='5.5'/%3E%3C/g%3E%3C/svg%3E"
         ),
         store_link=(
-            '                        <li><span lang="en">Coming soon to Google Play</span>'
-            '<span lang="tr">Yakında Google Play\'de</span></li>'
+            '                        <li><a href="https://play.google.com/store/apps/details?id=com.pitchtactics.mehmetokur">'
+            'Google Play</a></li>'
         ),
         title_en="Pitch Tactics Privacy Policy | Meok Apps",
         title_tr="Pitch Tactics Gizlilik Politikası | Meok Apps",
